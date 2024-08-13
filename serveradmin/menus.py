@@ -35,3 +35,16 @@ ADMIN_MENU = [
         ]
     }
 ]
+
+FRONT_MENU = [
+    {
+        "name": "Management",
+        "items": [
+            {
+                "icon": "server",
+                "label": "Containers",
+                "link": "admin-locations"
+            }
+        ]
+    }
+]

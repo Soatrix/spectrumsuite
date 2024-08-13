@@ -11,6 +11,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "panel/dashboard.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.FRONT_MENU
         context['page_title'] = 'Dashboard'
         context['version'] = settings.VERSION
         context["user"] = self.request.user
