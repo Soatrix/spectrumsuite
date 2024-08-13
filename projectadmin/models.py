@@ -88,3 +88,12 @@ class MilestoneComment(models.Model):
         return f"Comment by {self.author} on {self.created_at}"
 
 
+class ActivityLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    action = models.CharField(max_length=255)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} performed {self.action} on {self.timestamp}"
