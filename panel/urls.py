@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import *
 
 urlpatterns = [
     path('djadmin/', admin.site.urls),
     path('', include('serveradmin.urls')),
+    path('', DashboardView.as_view(), name="dashboard-home"),
 ]
