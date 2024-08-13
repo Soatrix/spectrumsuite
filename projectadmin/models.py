@@ -54,3 +54,18 @@ class Task(models.Model):
         self.assignee = user
         self.save()
 
+class Milestone(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='milestones')
+    due_date = models.DateField()
+    is_reached = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+    def reach(self):
+        self.is_reached = True
+        self.save()
+
+
