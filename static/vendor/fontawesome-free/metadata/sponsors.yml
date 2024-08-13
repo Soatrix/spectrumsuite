@@ -143,7 +143,7 @@ cibltd:
   url: 'http://www.cibltd.com'
 clear-blue-technologies:
   icons:
-    - solar-panel
+    - solar-projectadmin
   label: Clear Blue Technologies
   url: 'http://www.clearbluetechnologies.com'
 clicdata:
@@ -1354,8 +1354,8 @@ uptick:
     - hose-reel
     - light-emergency
     - light-emergency-on
-    - panel-ews
-    - panel-fire
+    - projectadmin-ews
+    - projectadmin-fire
     - person-to-door
     - phone-intercom
     - pipe-circle-check

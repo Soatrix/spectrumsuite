@@ -25,8 +25,8 @@ height: 100%;
 
 .gradient-bg {
 	color: #fff;
-	background: rgb(34,193,195);
-	background: linear-gradient(100deg, rgba(34,193,195,1) 0%, rgba(104,253,45,1) 100%);
-	border-color: rgb(34,193,195);
-	border-color: linear-gradient(100deg, rgba(34,193,195,1) 0%, rgba(104,253,45,1) 100%);
+	background: rgb(255,108,171);
+	background: linear-gradient(100deg, rgba(255,108,171,1) 0%, rgba(115,102,255,1) 100%);
+	border-color: rgb(255,108,171);
+	border-color: linear-gradient(100deg, rgba(255,108,171,1) 0%, rgba(115,102,255,1) 100%);
 }
