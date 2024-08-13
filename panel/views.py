@@ -16,3 +16,13 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['version'] = settings.VERSION
         context["user"] = self.request.user
         return context
+
+class AccountView(LoginRequiredMixin, TemplateView):
+    template_name = "panel/account.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.FRONT_MENU
+        context['page_title'] = 'Account'
+        context['version'] = settings.VERSION
+        context["user"] = self.request.user
+        return context

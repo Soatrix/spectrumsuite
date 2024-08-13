@@ -22,4 +22,5 @@ urlpatterns = [
     path('djadmin/', admin.site.urls),
     path('', include('serveradmin.urls')),
     path('', DashboardView.as_view(), name="dashboard-home"),
+    path('account/', AccountView.as_view(), name="account-home"),
 ]
