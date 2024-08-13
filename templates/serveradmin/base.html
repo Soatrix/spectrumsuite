@@ -10,7 +10,7 @@
     <meta name="author" content="">
 	
 
-    <title>{{ page_title }} | Goblin Panel</title>
+    <title>{{ page_title }} | Project Pulse</title>
 
 
 	{% load static %}
@@ -33,15 +33,15 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-custom-reverse sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-custom-reverse sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'admin-dashboard-home' %}">
-                <div class="sidebar-brand-icon rotate-n-15">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon">
 					{% load static %}
                     <img src="{% static 'img/logo.png' %}" class="img-fluid" />
                 </div>
-                <div class="sidebar-brand-text mx-3">Goblin Panel<sup>V1</sup></div>
+                <div class="sidebar-brand-text mx-3">Project<sup>Pulse</sup></div>
             </a>
 
             <!-- Divider -->
@@ -54,8 +54,8 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Admin Dashboard</span></a>
             </li>
-			
-			{% for menu in MENU %}
+
+            {% for menu in MENU %}
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
@@ -110,7 +110,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-gradient-custom topbar mb-4 static-top shadow">
+                <nav class="navbar navbar-expand navbar-light bg-gradient-custom-reverse topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -169,7 +169,7 @@
             <footer class="sticky-footer bg-gray-200">
                 <div class="container my-auto">
                     <div class=" copyright text-center text-dark my-auto">
-                        <span>Copyright &copy; Goblin Panel 2024, All Rights Reserved.</span>
+                        <span>Copyright &copy; Project Pulse 2024, All Rights Reserved.</span>
                     </div>
                 </div>
             </footer>

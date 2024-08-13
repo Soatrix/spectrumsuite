@@ -19616,7 +19616,7 @@ hammer:
   label: Hammer
   search:
     terms:
-      - admin
+      - projectadmin
       - configuration
       - equipment
       - fix
@@ -25081,7 +25081,7 @@ lock:
   label: Lock
   search:
     terms:
-      - admin
+      - projectadmin
       - closed
       - lock
       - locked
@@ -25115,7 +25115,7 @@ lock-open:
   label: Lock Open
   search:
     terms:
-      - admin
+      - projectadmin
       - lock
       - open
       - padlock
@@ -34071,7 +34071,7 @@ screwdriver:
   label: Screwdriver
   search:
     terms:
-      - admin
+      - projectadmin
       - configuration
       - equipment
       - fix
@@ -34106,7 +34106,7 @@ screwdriver-wrench:
   label: Screwdriver Wrench
   search:
     terms:
-      - admin
+      - projectadmin
       - configuration
       - equipment
       - fix
@@ -40335,7 +40335,7 @@ toolbox:
   label: Toolbox
   search:
     terms:
-      - admin
+      - projectadmin
       - chest
       - configuration
       - container
@@ -41812,7 +41812,7 @@ unlock:
   label: Unlock
   search:
     terms:
-      - admin
+      - projectadmin
       - lock
       - open
       - padlock
@@ -41846,7 +41846,7 @@ unlock-keyhole:
   label: Unlock Keyhole
   search:
     terms:
-      - admin
+      - projectadmin
       - lock
       - padlock
       - password

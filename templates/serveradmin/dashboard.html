@@ -3,18 +3,18 @@
 <!-- Content Row -->
 <div class="row">
 
-    <!-- Earnings (Monthly) Card Example -->
+    <!-- Active Projects Card -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
 					<div class="col mr-2">
 						<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-							Servers Online</div>
+							Active Projects</div>
 						<div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
 					</div>
 					<div class="col-auto">
-						<i class="fas fa-server fa-2x text-gray-300"></i>
+						<i class="fas fa-diagram-project fa-2x text-success"></i>
 					</div>
                 </div>
             </div>
@@ -23,16 +23,15 @@
 
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
+        <div class="card border-left-danger shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
 					<div class="col mr-2">
-						<div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-							Users</div>
+						<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Assigned Issues</div>
 						<div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
 					</div>
 					<div class="col-auto">
-						<i class="fas fa-users fa-2x text-gray-300"></i>
+						<i class="fas fa-circle-exclamation fa-2x text-danger"></i>
 					</div>
                 </div>
             </div>
@@ -45,12 +44,11 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
 					<div class="col mr-2">
-						<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-							Hoardes</div>
+						<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Your Tasks</div>
 						<div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
 					</div>
 					<div class="col-auto">
-						<i class="fas fa-gem fa-2x text-gray-300"></i>
+						<i class="fas fa-list-check fa-2x text-warning"></i>
 					</div>
                 </div>
             </div>
@@ -59,16 +57,87 @@
 
     <!-- Pending Requests Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2">
+        <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
 					<div class="col mr-2">
-						<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-							Panel Version</div>
+						<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Panel Version</div>
 						<div class="h5 mb-0 font-weight-bold text-gray-800">{{ version }}</div>
 					</div>
 					<div class="col-auto">
-						<i class="fas fa-code-compare fa-2x text-gray-300"></i>
+						<i class="fas fa-code-compare fa-2x text-info"></i>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Containers Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+					<div class="col mr-2">
+						<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Containers</div>
+						<div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+					</div>
+					<div class="col-auto">
+						<i class="fas fa-server fa-2x text-info"></i>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-purple shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+					<div class="col mr-2">
+						<div class="text-xs font-weight-bold text-purple text-uppercase mb-1">Development Time This Month</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">0 Days / 0 Hours / 0 Mins</div>
+					</div>
+					<div class="col-auto">
+						<i class="fas fa-user-clock fa-2x text-purple"></i>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-pink shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+					<div class="col mr-2">
+						<div class="text-xs font-weight-bold text-pink text-uppercase mb-1">Tasks Completed Today</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <div class="progress">
+                              <div class="progress-bar bg-pink progress-bar-striped progress-bar-animated" role="progressbar" style="width: 50%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0/12 Tasks Completed</div>
+                            </div>
+                        </div>
+					</div>
+					<div class="col-auto">
+						<i class="fas fa-business-time fa-2x text-pink"></i>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+					<div class="col mr-2">
+						<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Panel Reports</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">0 Reported Issues</div>
+					</div>
+					<div class="col-auto">
+                        <i class="fas fa-heart-pulse fa-2x text-success"></i>
 					</div>
                 </div>
             </div>
@@ -85,7 +154,7 @@
         <div class="card shadow mb-4">
             <!-- Card Body -->
             <div class="card-body">
-                <p class="text-dark">You are running Goblin Panel version <code>{{ version }}</code>. You are up-to-date!</p>
+                <p class="text-dark">You are running {{  PROJECT_NAME }} version <code>{{ version }}</code>. You are up-to-date!</p>
             </div>
         </div>
     </div>
