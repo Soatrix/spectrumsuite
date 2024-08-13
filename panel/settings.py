@@ -145,7 +145,7 @@ for app in INSTALLED_APPS:
     menulibrary = f"{app}.menus"
     if importlib.util.find_spec(menulibrary) is not None:
         app = importlib.import_module(menulibrary)
-        if app.ADMIN_MENU:
+        if hasattr(app, 'ADMIN_MENU'):
             ADMIN_MENU.extend(app.ADMIN_MENU)
-        if app.FRONT_MENU:
+        if hasattr(app, 'FRONT_MENU'):
             FRONT_MENU.extend(app.FRONT_MENU)
