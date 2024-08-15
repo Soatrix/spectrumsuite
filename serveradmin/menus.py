@@ -30,7 +30,7 @@ ADMIN_MENU = [
             {
                 "icon": "gem",
                 "label": "Hoardes",
-                "link": "admin-dashboard"
+                "link": "admin-hoardes"
             }
         ]
     }
