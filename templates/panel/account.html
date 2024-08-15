@@ -7,20 +7,20 @@
         <div class="row">
             {% if password_error or email_error %}
             <div class="col-md-12">
-                <div class="card text-white bg-danger mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Error Changing Password</h5>
-                        <p class="card-text">{{ password_error }}{{ email_error }}</p>
-                    </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Error:</strong> {{ password_error }}{{ email_error }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
             </div>
             {% elif password_success or email_success %}
             <div class="col-md-12">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Successfully Updated</h5>
-                        <p class="card-text">Your {% if password_success %}password{% else %}email{% endif %} has been successfully changed. Remember to use your new {% if password_success %}password{% else %}email{% endif %} when you login again.</p>
-                    </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <strong>Updated:</strong> Your {% if password_success %}password{% else %}email{% endif %} has been successfully changed. Remember to use your new {% if password_success %}password{% else %}email{% endif %} when you login again.
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
             </div>
             {% endif %}
