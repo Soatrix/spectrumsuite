@@ -5,26 +5,48 @@
         <h1 class="page-header text-dark"><i class="fas fa-user-shield"></i> Manage Your Account</h1>
         <hr>
         <div class="row">
-            <div class="col-md-4">
-                <div class="card card-default">
-                    <div class="card-body text-dark">
-                        <h5 class="card-title">Change Password</h5>
-                        <div class="form-group">
-                            <label for="password">Current Password</label>
-                            <input class="form-control" name="password" id="password">
-                        </div>
-                        <div class="form-group">
-                            <label for="new-password">New Password</label>
-                            <input class="form-control" name="new-password" id="new-password">
-                            <small>Your new password should be at least 8 characters in length.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="new-password-confirm">Confirm New Password</label>
-                            <input class="form-control" name="new-password-confirm" id="new-password-confirm">
-                        </div>
-                        <button class="btn btn-info float-right">Update Password</button>
+            {% if error %}
+            <div class="col-md-12">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Error Changing Password</h5>
+                        <p class="card-text">{{ error }}</p>
                     </div>
                 </div>
+            </div>
+            {% elif success %}
+            <div class="col-md-12">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Password Changed</h5>
+                        <p class="card-text">Your password has been successfully changed. Remember to use your new password when you login again.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="col-md-4">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="card card-default">
+                        <div class="card-body text-dark">
+                            <h5 class="card-title">Change Password</h5>
+                            <div class="form-group">
+                                <label for="password">Current Password</label>
+                                <input class="form-control" name="password" id="password" type="password">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input class="form-control" name="new-password" id="new-password" type="password">
+                                <small>Your new password should be at least 8 characters in length.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password-confirm">Confirm New Password</label>
+                                <input class="form-control" name="new-password-confirm" id="new-password-confirm" type="password">
+                            </div>
+                            <button type="submit" class="btn btn-info float-right">Update Password</button>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="col-md-4">
                 <div class="card card-default">

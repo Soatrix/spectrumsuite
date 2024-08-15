@@ -26,3 +26,28 @@ class AccountView(LoginRequiredMixin, TemplateView):
         context['version'] = settings.VERSION
         context["user"] = self.request.user
         return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if "password" in request.POST and "new-password" in request.POST and "new-password-confirm" in request.POST:
+            password = request.POST["password"]
+            new_password = request.POST["new-password"]
+            new_password_confirm = request.POST["new-password-confirm"]
+            if password != "" and new_password != "" and new_password_confirm != "":
+                # Verify Password
+                if self.request.user.check_password(password):
+                    # Verify Matching Passwords
+                    if new_password == new_password_confirm:
+                        self.request.user.set_password(new_password)
+                        self.request.user.save()
+                        context["success"] = True
+                    else:
+                        context["success"] = False
+                        context["error"] = "Passwords do not match. Please check your input and try again."
+                else:
+                    context["success"] = False
+                    context["error"] = "Your current password did not match. Please check your input and try again."
+            else:
+                context["success"] = False
+                context["error"] = "All fields are required."
+        return self.render_to_response(context)
