@@ -60,6 +60,7 @@ class Database(models.Model):
 
 class Hoarde(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    icon = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
     uuid = models.CharField(max_length=32, blank=True, unique=True)
     author = models.EmailField()

@@ -1865,6 +1865,10 @@ pre code {
   box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
 }
 
+.form-control::file-selector-button {
+    background-color: rgb(54, 185, 204) !important;
+}
+
 .form-control::-webkit-input-placeholder {
   color: #858796;
   opacity: 1;

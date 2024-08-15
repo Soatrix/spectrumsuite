@@ -1,52 +1,110 @@
 {% extends "serveradmin/base.html" %}
 {% block page_content %}
-<div class="row d-sm-flex align-items-center justify-content-between">
-	<div class="col-md-6">
-		<h1 class="h3 mb-0 text-dark"><i class="fas fa-gem"></i> Hoardes</h1>
-		<nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				{% url 'admin-dashboard-home' as url %}
-				<li class="breadcrumb-item"><a href="{{ url }}">Admin Dashboard</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Hoardes</li>
-			</ol>
-		</nav>
-	</div>
-	<div class="col-md-6">
-		<a href="{% url 'admin-hoardes-create' %}" class="float-end d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">Create Hoarde <i class="fas fa-plus fa-sm text-white-50"></i></a>
-	</div>
-	<p class="p-1 mr-4 page-header">This allows you to manage database hosts for user creation and associated nodes.</p>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading">Warning!</h4>
-            <p>Hoardes are a powerful method of configuration and customization. Please note that while powerful, modifying a gem wrongly can very easily brick your servers and cause more problems. Please avoid editing our default gems — those preinstalled — unless you are absolutely sure of what you are doing.</p>
-            <hr>
+<form action="" method="post" enctype="multipart/form-data">
+    <div class="row d-sm-flex align-items-center justify-content-between">
+        <div class="col-md-6">
+            <h1 class="h3 mb-0 text-dark"><i class="fas fa-gem"></i> Hoardes</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {% url 'admin-dashboard-home' as url %}
+                    <li class="breadcrumb-item"><a href="{{ url }}">Admin Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Hoardes</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'admin-hoardes-create' %}" class="float-right d-none d-sm-inline-block btn btn-sm btn-info shadow-sm m-1">Create Hoarde <i class="fas fa-plus fa-sm text-white-50"></i></a>
+            <a href="#" class="float-right d-none d-sm-inline-block btn btn-sm btn-success shadow-sm m-1" data-toggle="modal" data-target="#importModal">Import Gem <i class="fas fa-upload fa-sm text-white-50"></i></a>
+        </div>
+        <p class="p-1 mr-4 page-header">This allows you to manage database hosts for user creation and associated nodes.</p>
+
+        {% if success %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Gem Imported!</strong><br> The gem has been successfully imported.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% elif error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error!</strong><br>{{ error|safe }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Warning!</h4>
+                <p>Hoardes are a powerful method of configuration and customization. Please note that while powerful, modifying a gem wrongly can very easily brick your servers and cause more problems. Please avoid editing our default gems — those preinstalled — unless you are absolutely sure of what you are doing.</p>
+                <hr>
+            </div>
         </div>
     </div>
-</div>
-<table class="table table-striped table-light table-bordered table-hover table-sm">
-	<thead class="thead-dark">
-		<tr>
-			<th scope="col">ID</th>
-			<th scope="col">Name</th>
-			<th scope="col">UUID</th>
-			<th scope="col">Description</th>
-			<th scope="col">Eggs</th>
-			<th scope="col">Servers</th>
-		</tr>
-	</thead>
-	<tbody>
-        {% for hoarde in hoardes %}
+    <table class="table table-striped table-light table-bordered table-hover table-sm">
+        <thead class="thead-dark">
             <tr>
-                <td><span class="badge badge-secondary">{{ hoarde.id }}</span></td>
-                <td><a href="{% url 'admin-hoarde-detail' id=hoarde.id %}">{{ hoarde.name }}</a></td>
-                <td><span class="badge badge-secondary">{{ hoarde.uuid }}</span></td>
-                <td>{{ hoarde.description }}</td>
-                <td><span class="badge badge-secondary">0</span></td>
-                <td><span class="badge badge-secondary">0</span></td>
+                <th scope="col">ID</th>
+                <th scope="col" style="width: 15%;" class="text-center">Name</th>
+                <th scope="col">UUID</th>
+                <th scope="col">Description</th>
+                <th scope="col">Gems</th>
+                <th scope="col">Servers</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for hoarde in hoardes %}
+                <tr>
+                    <td><span class="badge badge-secondary">{{ hoarde.id }}</span></td>
+                    <td><a href="{% url 'admin-hoarde-detail' id=hoarde.id %}"><i class="fas fa-{% if hoarde.icon %}{{ hoarde.icon }}{% else %}gem{% endif %}"></i> {{ hoarde.name }}</a></td>
+                    <td><span class="badge badge-secondary">{{ hoarde.uuid }}</span></td>
+                    <td>{{ hoarde.description }}</td>
+                    <td class="text-center"><span class="badge badge-secondary">{{ hoarde.gems.all|length }}</span></td>
+                    <td class="text-center"><span class="badge badge-secondary">0</span></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form method="post" action="{% url 'admin-location-create' %}">
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="importModalLabel">Import Gem</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="gem-file">Gem File <small class="text-danger">required</small></label>
+                                <input class="form-control" type="file" name="gem-file" id="gem-file">
+                                <small>Select the <span class="badge badge-info">.json</span> file for the new gem that you wish to import.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="hoarde">Associated Hoarde <small class="text-danger">required</small></label>
+                                <select class="custom-select" name="hoarde" id="hoarde">
+                                    {% for hoarde in hoardes %}
+                                        <option value="{{ hoarde.id }}">{{ hoarde.name }} ({{ hoarde.author }})</option>
+                                    {% endfor %}
+                                </select>
+                                <small>Select the nest that this gem will be associated with from the dropdown. If you wish to associate it with a new hoarde you will need to create that hoarde before continuing.</small>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-success" name="import" type="submit">Import</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</form>
 {% endblock %}

@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.utils.text import slugify
 import glob, ntpath
 from .models import *
@@ -312,6 +313,38 @@ class AdminHoardesView(LoginRequiredMixin, TemplateView):
         context["user"] = self.request.user
         context["hoardes"] = Hoarde.objects.all()
         return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "import" in request.POST:
+            if "gem-file" in request.FILES:
+                if "hoarde" in request.POST:
+                    gemFile = request.FILES.get("gem-file")
+                    gemJson = loads(gemFile.read())
+
+                    name = gemJson["name"]
+                    hoardeID = int(request.POST.get("hoarde"))
+                    hoarde = Hoarde.objects.get(pk=hoardeID)
+
+                    fs = FileSystemStorage()
+                    filename = fs.save(gemFile.name, gemFile)
+
+                    gem = Gem.objects.create(
+                        name=name,
+                        hoarde=hoarde,
+                        gem_file=filename
+                    )
+                    gem.save()
+                    context["hoardes"] = Hoarde.objects.all()
+                    context["success"] = True
+                else:
+                    context["success"] = False
+                    context["error"] = "You must specify a hoarde to add this gem to."
+            else:
+                context["success"] = False
+                context["error"] = "You must upload a file to import."
+
+        return self.render_to_response(context)
 
 class AdminHoardeCreateView(LoginRequiredMixin, TemplateView):
     template_name = "serveradmin/hoardes-new.html"
@@ -374,7 +407,6 @@ class AdminHoardeDetailView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        print(request.POST)
 
         if "delete" in request.POST:
             if not context["hoarde"].builtin:
@@ -430,6 +462,32 @@ class AdminGemDetailView(LoginRequiredMixin, TemplateView):
             setattr(context["gem"], "logs", dumps(loads(gemJson["config"]["logs"]), indent=4))
             setattr(context["gem"], "startup", dumps(loads(gemJson["config"]["startup"]), indent=4))
         return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if "update-gem" in request.POST:
+            if "gem-file" in request.FILES:
+                gemFile = request.FILES.get("gem-file")
+                if gemFile != "":
+                    print(gemFile.name)
+                    if gemFile.name.endswith(".json"):
+                        fs = FileSystemStorage()
+                        filename = fs.save(gemFile.name, gemFile)
+                        context["gem"].gem_file = filename
+                        context["gem"].save()
+                        context["success"] = True
+                    else:
+                        context["success"] = False
+                        context["error"] = "Only *.json files are valid types to be uploaded."
+                else:
+                    context["success"] = False
+                    context["error"] = "There was a problem uploading this file. Please try again."
+            else:
+                context["success"] = False
+                context["error"] = "You must upload a file in order to update the gem."
+                print(request.FILES)
+
+        return self.render_to_response(context)
+
 
 class AdminGemExportView(View):
     def get(self, request, *args, **kwargs):
