@@ -435,7 +435,7 @@ class AdminHoardeDetailView(LoginRequiredMixin, TemplateView):
             if started:
                 context["error"] = context["error"] + "</ul>"
             saveRequired = False
-            if not context["error"]:
+            if not "error" in context:
                 for field in fields:
                     setattr(context["hoarde"], field, request.POST.get(field))
                     saveRequired = True

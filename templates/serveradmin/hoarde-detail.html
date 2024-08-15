@@ -89,7 +89,7 @@
                         <th scope="col" style="width: 15%;" class="text-center">Name</th>
                         <th scope="col">Description</th>
                         <th scope="col">Servers</th>
-                        <th scope="col"></th>
+                        <th scope="col" class="text-center"><i class="fas fa-download"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,7 +98,7 @@
                             <td><span class="badge badge-secondary">{{ gem.id }}</span></td>
                             <td><a href="{% url 'admin-gem-detail' id=gem.id %}"><i class="fas fa-{% if gem.json.icon %}{{ gem.json.icon }}{% else %}gem{% endif %}"></i> {{ gem.name }}</a></td>
                             <td>{{ gem.json.description }}</td>
-                            <td>0</td>
+                            <td class="text-center"><span class="badge badge-secondary">0</span></td>
                             <td><a href="{% url 'admin-gem-export' id=gem.id %}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a></td>
                         </tr>
                     {% endfor %}
