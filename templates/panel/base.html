@@ -127,10 +127,12 @@
                                     <i class="fas fa-user-shield fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Manage Account
                                 </a>
+                                {% if user.is_superuser %}
                                 <a class="dropdown-item" href="{% url 'admin-dashboard-home' %}">
                                     <i class="fas fa-tachometer fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Admin Panel
                                 </a>
+                                {% endif %}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
