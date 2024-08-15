@@ -5,21 +5,21 @@
         <h1 class="page-header text-dark"><i class="fas fa-user-shield"></i> Manage Your Account</h1>
         <hr>
         <div class="row">
-            {% if error %}
+            {% if password_error or email_error %}
             <div class="col-md-12">
                 <div class="card text-white bg-danger mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Error Changing Password</h5>
-                        <p class="card-text">{{ error }}</p>
+                        <p class="card-text">{{ password_error }}{{ email_error }}</p>
                     </div>
                 </div>
             </div>
-            {% elif success %}
+            {% elif password_success or email_success %}
             <div class="col-md-12">
                 <div class="card text-white bg-success mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Password Changed</h5>
-                        <p class="card-text">Your password has been successfully changed. Remember to use your new password when you login again.</p>
+                        <h5 class="card-title">Successfully Updated</h5>
+                        <p class="card-text">Your {% if password_success %}password{% else %}email{% endif %} has been successfully changed. Remember to use your new {% if password_success %}password{% else %}email{% endif %} when you login again.</p>
                     </div>
                 </div>
             </div>
@@ -49,20 +49,23 @@
                 </form>
             </div>
             <div class="col-md-4">
-                <div class="card card-default">
-                    <div class="card-body text-dark">
-                        <h5 class="card-title">Change Email</h5>
-                        <div class="form-group">
-                            <label for="email">New Email</label>
-                            <input class="form-control" name="email" id="email">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="card card-default">
+                        <div class="card-body text-dark">
+                            <h5 class="card-title">Change Email</h5>
+                            <div class="form-group">
+                                <label for="email">New Email</label>
+                                <input class="form-control" name="email" id="email" type="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="email-confirm">Confirm New Email</label>
+                                <input class="form-control" name="email-confirm" id="email-confirm" type="email">
+                            </div>
+                            <button type="submit" class="btn btn-info float-right">Update Email</button>
                         </div>
-                        <div class="form-group">
-                            <label for="email-confirm">Confirm New Email</label>
-                            <input class="form-control" name="email-confirm" id="email-confirm">
-                        </div>
-                        <button class="btn btn-info float-right">Update Email</button>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="col-md-4">
                 <div class="card card-default">
