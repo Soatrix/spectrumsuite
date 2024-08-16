@@ -14,13 +14,21 @@
 </div>
 <div class="row">
     <div class="col-md-7">
-        <div class="card text-dark">
+        <div class="card text-dark mb-3">
             <div class="card-header">
                 <h5 class="card-title text-white float-left">Service Information</h5>
                 <span class="badge bg-secondary float-right">{{ service.category.name }}</span>
             </div>
             <div class="card-body">
                 <p>{{ service.description }}</p>
+            </div>
+        </div>
+        <div class="card text-dark mb-3">
+            <div class="card-header">
+                <h5 class="card-title text-white">Notes</h5>
+            </div>
+            <div class="card-body">
+                <p>{% if service.notes %}{{ service.notes }}{% else %}No notes yet.{% endif %}</p>
             </div>
         </div>
     </div>
