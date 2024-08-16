@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 import os
@@ -76,7 +77,10 @@ class Hoarde(models.Model):
 
 def gem_upload_path(instance, filename):
     # Convert hoarde name to slug format
-    hoarde_slug = slugify(instance.hoarde.name)
+    if isinstance(instance, Hoarde):
+        hoarde_slug = slugify(instance.name)
+    else:
+        hoarde_slug = slugify(instance.hoarde.name)
     # Return the path 'eggs/<slug>/<filename>'
     return f'gems/{hoarde_slug}/{filename}'
 class Gem(models.Model):
@@ -100,3 +104,38 @@ class Gem(models.Model):
                 os.remove(self.gem_file.path)
         # Call the parent class's delete method
         super().delete(*args, **kwargs)
+
+class Server(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="servers")
+    uuid = models.CharField(max_length=32, unique=True, blank=True)
+    node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name="servers")
+    default_allocation = models.ForeignKey(Allocation, on_delete=models.CASCADE, related_name="servers")
+    additional_allocations = models.ManyToManyField(Allocation)
+    database_limit = models.PositiveIntegerField(default=0, help_text="Database limit")
+    allocation_limit = models.PositiveIntegerField(default=0, help_text="Allocation limit")
+    backup_limit = models.PositiveIntegerField(default=0, help_text="Backup limit")
+    cpu_limit = models.PositiveIntegerField(default=0, help_text="CPU limit")
+    cpu_pinning = models.CharField(max_length=255, blank=True)
+    memory_limit = models.PositiveIntegerField(default=0, help_text="Memory limit")
+    memory_overallocate = models.PositiveIntegerField(default=0, help_text="Memory over-allocation percentage")
+    disk_limit = models.PositiveIntegerField(default=0, help_text="Disk limit")
+    disk_overallocate = models.PositiveIntegerField(default=0, help_text="Disk over-allocation percentage")
+    io_weight = models.PositiveIntegerField(default=500, help_text="IO weight")
+    oom_killer = models.BooleanField(default=False)
+    hoarde = models.ForeignKey(Hoarde, on_delete=models.CASCADE, related_name="servers")
+    gem = models.ForeignKey(Gem, on_delete=models.CASCADE, related_name="servers")
+    skip_install = models.BooleanField(default=False)
+    docker = models.CharField(max_length=255)
+    docker_custom = models.CharField(max_length=255, blank=True)
+    startup_command = models.CharField(max_length=255)
+    variables = models.TextField(default="{}")
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = uuid.uuid4().hex
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} ({self.uuid})"

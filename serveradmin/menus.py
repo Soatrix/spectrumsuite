@@ -4,8 +4,8 @@ ADMIN_MENU = [
         "items": [
             {
                 "icon": "server",
-                "label": "Containers",
-                "link": "admin-locations"
+                "label": "Servers",
+                "link": "admin-servers"
             },
             {
                 "icon": "city",
@@ -21,6 +21,11 @@ ADMIN_MENU = [
                 "icon": "database",
                 "label": "Databases",
                 "link": "admin-databases"
+            },
+            {
+                "icon": "users",
+                "label": "Users",
+                "link": "admin-users"
             }
         ]
     },
