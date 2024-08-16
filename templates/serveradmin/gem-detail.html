@@ -145,8 +145,8 @@
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-danger btn-sm float-left" type="submit" name="delete" id="delete" {% if gem.hoarde.builtin %}disabled="disabled"{% endif %}><i class="fas fa-trash"></i></button>
-                    <button class="btn btn-info btn-sm m-1 float-right" type="submit" name="save" id="save">Save</button>
-                    <a class="btn btn-success btn-sm m-1 float-right" href="{% url 'admin-gem-export' id=gem.id %}">Export <i class="fas fa-download"></i></a>
+                    <button class="btn btn-custom-primary btn-sm m-1 float-right" type="submit" name="save" id="save">Save</button>
+                    <a class="btn btn-custom-secondary btn-sm m-1 float-right" href="{% url 'admin-gem-export' id=gem.id %}">Export <i class="fas fa-download"></i></a>
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <a href="#" class="btn btn-info btn-sm float-right">Add Variable</a>
+                            <a href="#" class="btn btn-custom-primary btn-sm float-right">Add Variable</a>
                         </div>
                     </div>
                     <br>
@@ -210,7 +210,7 @@
                             </div>
                             <div class="card-footer bg-white">
                                 <button type="submit" name="delete" class="btn btn-danger btn-sm float-left" {% if gem.hoarde.builtin %}disabled="disabled"{% endif %}><i class="fas fa-trash"></i></button>
-                                <button type="submit" name="save" class="btn btn-info btn-sm float-right">Save</button>
+                                <button type="submit" name="save" class="btn btn-custom-primary btn-sm float-right">Save</button>
                             </div>
                         </div>
                         <br>
@@ -252,7 +252,7 @@
                     </div>
                 </div>
                 <div class="card-footer bg-white">
-                    <button type="submit" name="save" class="btn btn-info btn-sm float-right">Save</button>
+                    <button type="submit" name="save" class="btn btn-custom-primary btn-sm float-right">Save</button>
                 </div>
             </div>
         </div>

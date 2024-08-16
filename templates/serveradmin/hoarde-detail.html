@@ -57,7 +57,7 @@
         </div>
         <div class="card-footer">
             <button type="button" class="btn btn-danger float-left" {% if hoarde.builtin %}disabled="disabled"{% endif %} data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash"></i></button>
-            <button type="submit" name="save" class="btn btn-info float-right">Save</button>
+            <button type="submit" name="save" class="btn btn-custom-primary float-right">Save</button>
         </div>
     </div>
 
@@ -99,7 +99,7 @@
                             <td><a href="{% url 'admin-gem-detail' id=gem.id %}"><i class="fas fa-{% if gem.json.icon %}{{ gem.json.icon }}{% else %}gem{% endif %}"></i> {{ gem.name }}</a></td>
                             <td>{{ gem.json.description }}</td>
                             <td class="text-center"><span class="badge badge-secondary">0</span></td>
-                            <td><a href="{% url 'admin-gem-export' id=gem.id %}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a></td>
+                            <td><a href="{% url 'admin-gem-export' id=gem.id %}" class="btn btn-sm btn-custom-secondary"><i class="fas fa-download"></i></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -31,6 +31,8 @@ urlpatterns = [
 
     path('admin/servers/', AdminServersView.as_view(), name="admin-servers"),
 
+    path('admin/themes/', AdminThemesView.as_view(), name="admin-themes"),
+
     path('auth/login/', AuthLoginView.as_view(), name="auth-login"),
     path('auth/logout/', auth_views.LogoutView.as_view(), name="auth-logout"),
     path('auth/register/', AuthRegisterView.as_view(), name="auth-register"),

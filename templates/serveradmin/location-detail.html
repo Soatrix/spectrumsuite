@@ -22,5 +22,5 @@
     <label for="locationDescription">Description</label>
     <input type="text" class="form-control" id="locationDescription" placeholder="Location Description e.g. US Server #1" value="{{ location.description }}" disabled="disabled">
 </div>
-<a class="btn btn-info float-end" href="{% url 'admin-location-edit' id=location.id %}"><i class="fas fa-pencil"></i></a>
+<a class="btn btn-custom-primary float-end" href="{% url 'admin-location-edit' id=location.id %}"><i class="fas fa-pencil"></i></a>
 {% endblock %}
