@@ -42,7 +42,7 @@ class Client(models.Model):
     service_plan = models.TextField(blank=True)
     additional_needs = models.TextField(blank=True)
 
-    connected_services = models.ManyToManyField('Service', blank=True)
+    connected_services = models.ManyToManyField('Service', blank=True, related_name="clients")
     notes = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

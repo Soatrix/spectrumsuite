@@ -55,6 +55,18 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
+                    <tbody>
+                        {% for service in services %}
+                            <tr>
+                                <td>{{ service.name }}</td>
+                                <td><span class="badge badge-custom">{{ service.category.name }}</span></td>
+                                <td><span class="badge badge-{% if service.active %}success{% else %}danger{% endif %}">{% if service.active %}Active{% else %}Not Active{% endif %}</span></td>
+                                <td>{{ service.contact_phone_number }}</td>
+                                <td><span class="badge badge-secondary">{{ service.clients.count }}</span></td>
+                                <td><a href="#" class="badge badge-custom"><i class="fas fa-wrench"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
