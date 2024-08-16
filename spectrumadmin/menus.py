@@ -6,6 +6,16 @@ ADMIN_MENU = [
                 "icon": "users",
                 "label": "Clients",
                 "link": "projectadmin-projects"
+            },
+            {
+                "icon": "file-contract",
+                "label": "Documents",
+                "link": "projectadmin-projects"
+            },
+            {
+                "icon": "folder-tree",
+                "label": "Resources",
+                "link": "projectadmin-projects"
             }
         ]
     }

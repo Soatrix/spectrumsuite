@@ -9918,10 +9918,10 @@ a:focus {
 
 .bg-gradient-custom {
 	color: #fff;
-	background: rgb(255,108,171);
-	background: linear-gradient(100deg, rgba(255,108,171,1) 0%, rgba(115,102,255,1) 60%);
-	border-color: rgb(255,108,171);
-	border-color: linear-gradient(100deg, rgba(255,108,171,1) 0%, rgba(115,102,255,1) 60%);
+	background: rgb(255,222,89);
+	background: linear-gradient(100deg, rgba(255,102,196,1) 0%, rgba(255,222,89,1) 100%);
+	border-color: rgb(255,222,89);
+	border-color: linear-gradient(100deg, rgba(255,102,196,1) 0%, rgba(255,222,89,1) 100%);
 }
 
 .bg-custom {
@@ -9934,28 +9934,28 @@ a:focus {
 @media (min-width: 768px) {
   .bg-gradient-custom {
     color: #fff;
-    background: rgb(34, 193, 195);
-    background: linear-gradient(100deg, rgba(34, 193, 195, 1) 0%, rgba(104, 253, 45, 1) 100%);
-    border-color: rgb(34, 193, 195);
-    border-color: linear-gradient(100deg, rgba(34, 193, 195, 1) 0%, rgba(104, 253, 45, 1) 100%);
+	background: rgb(255,222,89);
+	background: linear-gradient(100deg, rgba(255,102,196,1) 0%, rgba(255,222,89,1) 50%);
+	border-color: rgb(255,222,89);
+	border-color: linear-gradient(100deg, rgba(255,102,196,1) 0%, rgba(255,222,89,1) 50%);
   }
 }
 
 .bg-gradient-custom-reverse {
 	color: #fff;
-	background: rgba(115,102,255,1);
-	background: linear-gradient(100deg, rgba(115,102,255,1) 0%, rgba(255,108,171,1) 60%);
-	border-color: rgba(115,102,255,1);
-	background: linear-gradient(100deg, rgba(115,102,255,1) 0%, rgba(255,108,171,1) 60%);
+	background: rgb(255,102,196);
+	background: linear-gradient(100deg, rgba(255,222,89,1) 0%, rgba(255,102,196,1) 100%);
+	border-color: rgb(255,102,196);
+	border-color: linear-gradient(100deg, rgba(255,222,89,1) 0%, rgba(255,102,196,1) 100%);
 }
 
 @media (min-width: 768px) {
   .bg-gradient-custom-reverse {
     color: #fff;
-    background: rgb(34, 193, 195);
-    background: linear-gradient(100deg, rgba(104, 253, 45, 1) 0%, rgba(34, 193, 195, 1) 25%);
-    border-color: rgb(34, 193, 195);
-    border-color: linear-gradient(100deg, rgba(104, 253, 45, 1) 0%, rgba(34, 193, 195, 1) 25%);
+	background: rgb(255,102,196);
+	background: linear-gradient(100deg, rgba(255,222,89,1) 0%, rgba(255,102,196,1) 50%);
+	border-color: rgb(255,102,196);
+	border-color: linear-gradient(100deg, rgba(255,222,89,1) 0%, rgba(255,102,196,1) 50%);
   }
 }
 
