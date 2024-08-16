@@ -537,3 +537,39 @@ class AdminGemExportView(View):
         gem = get_object_or_404(Gem, id=self.kwargs["id"])
         response = FileResponse(open(gem.gem_file.path, 'rb'), as_attachment=True, filename=ntpath.basename(gem.gem_file.path))
         return response
+
+class AdminServersView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/servers.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["page_title"] = "Servers"
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        context["servers"] = Server.objects.all()
+        return context
+
+class AdminUsersView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/users.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["page_title"] = "Users"
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        context["users"] = User.objects.all()
+        return context
+
+class AdminUserDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/user-detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["adminUser"] = get_object_or_404(User, id=self.kwargs["id"])
+        context["MENU"] = settings.ADMIN_MENU
+        context["page_title"] = f"User {context["adminUser"].username}"
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        return context
