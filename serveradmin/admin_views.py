@@ -10,7 +10,10 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.utils.text import slugify
 import glob, ntpath
+
+from spectrumadmin.models import Service
 from .models import *
+from spectrumadmin.models import Service
 from json import dumps, loads
 
 # Create your views here.
@@ -31,6 +34,7 @@ class AdminDashboardView(LoginRequiredMixin, TemplateView):
         context['page_title'] = 'Dashboard'
         context['version'] = settings.VERSION
         context["user"] = self.request.user
+        context["services"] = Service.objects.all()
         return context
 
 class AdminLocationsView(LoginRequiredMixin, TemplateView):
