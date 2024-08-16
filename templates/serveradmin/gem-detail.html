@@ -84,12 +84,12 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" name="description" id="description" type="text" rows="5">{{ gem.json.description }}</textarea>
+                                <textarea class="form-control" name="description" id="description" rows="5">{{ gem.json.description|safe }}</textarea>
                                 <small>A description of this Gem that will be displayed throughout the Panel as needed.</small>
                             </div>
                             <div class="form-group">
                                 <label for="startup-command">Startup Command <small class="text-danger">required</small></label>
-                                <textarea class="form-control" name="startup-command" id="startup-command" type="text" rows="5">{{ gem.json.startup }}</textarea>
+                                <textarea class="form-control" name="startup-command" id="startup-command" rows="5">{{ gem.json.startup }}</textarea>
                                 <small>The default startup command that should be used for new servers using this Gem.</small>
                             </div>
                         </div>
@@ -145,8 +145,8 @@
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-danger btn-sm float-left" type="submit" name="delete" id="delete" {% if gem.hoarde.builtin %}disabled="disabled"{% endif %}><i class="fas fa-trash"></i></button>
-                    <button class="btn btn-info btn-info btn-sm m-1 float-right" type="submit" name="save" id="save">Save</button>
-                    <a class="btn btn-info btn-primary btn-sm m-1 float-right" href="{% url 'admin-gem-export' id=gem.id %}"><i class="fas fa-download"></i> Export</a>
+                    <button class="btn btn-info btn-sm m-1 float-right" type="submit" name="save" id="save">Save</button>
+                    <a class="btn btn-success btn-sm m-1 float-right" href="{% url 'admin-gem-export' id=gem.id %}">Export <i class="fas fa-download"></i></a>
                 </div>
             </div>
         </div>
@@ -169,23 +169,23 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input class="form-control" name="name" id="name" value="{{ variable.name }}" />
+                                    <input class="form-control" name="var-name-{{ forloop.counter0 }}" id="var-name-{{ forloop.counter0 }}" value="{{ variable.name }}" />
                                 </div>
                                 <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <input class="form-control" name="description" id="description" value="{{ variable.description }}" />
+                                    <label for="var-description-{{ forloop.counter0 }}">Description</label>
+                                    <input class="form-control" name="var-description-{{ forloop.counter0 }}" id="var-description-{{ forloop.counter0 }}" value="{{ variable.description }}" />
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="environment">Environment Variable</label>
-                                            <input class="form-control" name="environment" id="environment" value="{{ variable.env_variable }}" />
+                                            <input class="form-control" name="var-environment-{{ forloop.counter0 }}" id="var-environment-{{ forloop.counter0 }}" value="{{ variable.env_variable }}" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="default">Default Value</label>
-                                            <input class="form-control" name="default" id="default" value="{{ variable.default_value }}" />
+                                            <input class="form-control" name="var-default" id="var-default-{{ forloop.counter0 }}" value="{{ variable.default_value }}" />
                                         </div>
                                     </div>
                                     <small>This variable can be accessed in the startup command by using <span class="badge badge-info">&#123;&#123;{{ variable.env_variable }}&#125;&#125;</span></small>
@@ -195,13 +195,13 @@
                                     <label>Permissions</label>
                                     <br>
                                     <div class="form-check form-switch form-check-inline">
-                                        <input class="form-check-input" type="checkbox" name="userCanEdit" value="" id="userCanEdit" {% if variable.user_editable %}checked="checked"{% endif %}>
+                                        <input class="form-check-input" type="checkbox" name="userCanEdit-{{ forloop.counter0 }}" value="" id="userCanEdit-{{ forloop.counter0 }}" {% if variable.user_editable %}checked="checked"{% endif %}>
                                         <label class="form-check-label" for="flexCheckDefault">
                                             Users Can Edit
                                         </label>
                                     </div>
                                     <div class="form-check form-switch form-check-inline">
-                                        <input class="form-check-input" type="checkbox" name="userCanView" value="" id="userCanView" {% if variable.user_viewable %}checked="checked"{% endif %}>
+                                        <input class="form-check-input" type="checkbox" name="userCanView-{{ forloop.counter0 }}" value="" id="userCanView-{{ forloop.counter0 }}" {% if variable.user_viewable %}checked="checked"{% endif %}>
                                         <label class="form-check-label" for="flexCheckDefault">
                                             Users Can View
                                         </label>
@@ -210,7 +210,7 @@
                             </div>
                             <div class="card-footer bg-white">
                                 <button type="submit" name="delete" class="btn btn-danger btn-sm float-left" {% if gem.hoarde.builtin %}disabled="disabled"{% endif %}><i class="fas fa-trash"></i></button>
-                                <button type="submit" name="save-variable" class="btn btn-info btn-sm float-right">Save</button>
+                                <button type="submit" name="save" class="btn btn-info btn-sm float-right">Save</button>
                             </div>
                         </div>
                         <br>

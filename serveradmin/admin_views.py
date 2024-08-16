@@ -327,16 +327,20 @@ class AdminHoardesView(LoginRequiredMixin, TemplateView):
                     hoarde = Hoarde.objects.get(pk=hoardeID)
 
                     fs = FileSystemStorage()
-                    filename = fs.save(gemFile.name, gemFile)
+                    filename = fs.save(gem_upload_path(hoarde, gemFile.name), gemFile)
 
-                    gem = Gem.objects.create(
+                    gem, created = Gem.objects.get_or_create(
                         name=name,
                         hoarde=hoarde,
                         gem_file=filename
                     )
-                    gem.save()
-                    context["hoardes"] = Hoarde.objects.all()
-                    context["success"] = True
+                    if created:
+                        gem.save()
+                        context["hoardes"] = Hoarde.objects.all()
+                        context["success"] = True
+                    else:
+                        context["success"] = False
+                        context["error"] = "A Gem with this name already exists under this hoarde."
                 else:
                     context["success"] = False
                     context["error"] = "You must specify a hoarde to add this gem to."
@@ -468,10 +472,9 @@ class AdminGemDetailView(LoginRequiredMixin, TemplateView):
             if "gem-file" in request.FILES:
                 gemFile = request.FILES.get("gem-file")
                 if gemFile != "":
-                    print(gemFile.name)
                     if gemFile.name.endswith(".json"):
                         fs = FileSystemStorage()
-                        filename = fs.save(gemFile.name, gemFile)
+                        filename = fs.save(gem_upload_path(context["gem"], gemFile.name), gemFile)
                         context["gem"].gem_file = filename
                         context["gem"].save()
                         context["success"] = True
@@ -484,7 +487,47 @@ class AdminGemDetailView(LoginRequiredMixin, TemplateView):
             else:
                 context["success"] = False
                 context["error"] = "You must upload a file in order to update the gem."
-                print(request.FILES)
+        elif "save" in request.POST:
+            requiredFields = ["name", "docker", "startup-command"]
+            fields = ["name", "description", "docker", "startup-command"]
+            started = False
+            for field in fields:
+                if field not in request.POST:
+                    if not started:
+                        started = True
+                        context["error"] = "<ul>"
+                    context["error"] = context["error"] + f"<li>{field} is required."
+                elif field in request.POST and field in requiredFields and request.POST.get(field) == "":
+                    if not started:
+                        context["error"] = "<ul>"
+                        started = True
+                    context["error"] = context["error"] + f"<li>The \"" + field + "\" field is required.</li>"
+            if started:
+                context["error"] = context["error"] + "</ul>"
+            saveRequired = False
+            if not "error" in context:
+                for field in fields:
+                    if field == "name":
+                        context["gem"].json["name"] = request.POST.get(field)
+                        context["gem"].name = request.POST.get(field)
+                        context["gem"].save()
+                    elif field == "description":
+                        context["gem"].json["description"] = request.POST.get(field)
+                    elif field == "docker":
+                        dockerJson = {}
+                        dockerImages = request.POST.get(field).splitlines()
+                        for dockerImage in dockerImages:
+                            name, image = dockerImage.split("|")
+                            dockerJson[name] = image
+                        context["gem"].json["docker_images"] = dockerJson
+                    elif field == "startup-command":
+                        context["gem"].json["startup"] = request.POST.get(field)
+                    saveRequired = True
+            if saveRequired:
+                with open(context["gem"].gem_file.path, "w") as f:
+                    f.write(dumps(context["gem"].json, indent=4))
+                    f.close()
+                context["success"] = True
 
         return self.render_to_response(context)
 

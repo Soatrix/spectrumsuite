@@ -76,7 +76,10 @@ class Hoarde(models.Model):
 
 def gem_upload_path(instance, filename):
     # Convert hoarde name to slug format
-    hoarde_slug = slugify(instance.hoarde.name)
+    if isinstance(instance, Hoarde):
+        hoarde_slug = slugify(instance.name)
+    else:
+        hoarde_slug = slugify(instance.hoarde.name)
     # Return the path 'eggs/<slug>/<filename>'
     return f'gems/{hoarde_slug}/{filename}'
 class Gem(models.Model):
