@@ -44,21 +44,18 @@
                 <div class="card-header">
                     <h5 class="card-title text-white float-left">Available Services</h5>
                 </div>
-                <div class="card-body">
-                    <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Service Name</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Active</th>
-                                <th scope="col">Contact</th>
-                                <th scope="col">Clients</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+                <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Service Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Active</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Clients</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
         <div class="tab-pane fade" id="service-categories" role="tabpanel" aria-labelledby="service-categories-tab">
