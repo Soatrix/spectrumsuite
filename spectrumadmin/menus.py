@@ -13,6 +13,11 @@ ADMIN_MENU = [
                 "link": "projectadmin-projects"
             },
             {
+                "icon": "hands-holding-child",
+                "label": "Services",
+                "link": "projectadmin-projects"
+            },
+            {
                 "icon": "folder-tree",
                 "label": "Resources",
                 "link": "projectadmin-projects"
