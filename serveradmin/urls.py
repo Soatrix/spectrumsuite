@@ -21,6 +21,10 @@ urlpatterns = [
     path('admin/databases/', AdminDatabasesView.as_view(), name="admin-databases"),
 
     path('admin/hoardes/', AdminHoardesView.as_view(), name="admin-hoardes"),
+    path('admin/hoardes/new/', AdminHoardeCreateView.as_view(), name="admin-hoardes-create"),
+    path('admin/hoardes/view/<int:id>/', AdminHoardeDetailView.as_view(), name="admin-hoarde-detail"),
+    path('admin/hoardes/gems/view/<int:id>/', AdminGemDetailView.as_view(), name="admin-gem-detail"),
+    path('admin/hoardes/gems/export/<int:id>/', AdminGemExportView.as_view(), name="admin-gem-export"),
 
     path('auth/login/', AuthLoginView.as_view(), name="auth-login"),
     path('auth/logout/', auth_views.LogoutView.as_view(), name="auth-logout"),

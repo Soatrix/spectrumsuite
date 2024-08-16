@@ -1,0 +1,278 @@
+{% extends "serveradmin/base.html" %}
+{% block page_content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row d-sm-flex align-items-center justify-content-between mb-4">
+        <div class="col-md-5">
+            <h1 class="h3 mb-0 text-dark"><i class="fas fa-{% if gem.json.icon %}{{ gem.json.icon }}{% else %}gem{% endif %}"></i> {{ gem.name }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'admin-dashboard-home' %}">Admin Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'admin-hoardes' %}">Hoardes</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'admin-hoarde-detail' id=gem.hoarde.id %}">{{ gem.hoarde.name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ gem.name }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-md-7">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Configuration</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="variables-tab" data-toggle="tab" href="#variables" role="tab" aria-controls="variables" aria-selected="false">Variables</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="install-tab" data-toggle="tab" href="#install" role="tab" aria-controls="install" aria-selected="false">Install Script</a>
+              </li>
+            </ul>
+        </div>
+        {% if success %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Gem Updated!</strong><br> The gem has been successfully updated.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% elif error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error!</strong><br>{{ error|safe }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active mb-3" id="config" role="tabpanel" aria-labelledby="config-tab">
+            <div class="card text-dark">
+                <div class="card-header bg-info">
+                    <h5 class="page-title text-white float-left">Gem File</h5>
+                    <button class="btn btn-danger btn-sm float-right" type="submit" name="update-gem">Update Gem</button>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <input class="form-control" type="file" name="gem-file" id="gem-file">
+                        <small>If you would like to replace settings for this Gem by uploading a new JSON file, simply select it here and press "Update Gem". This will not change any existing startup strings or Docker images for existing servers.</small>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card text-dark mb-3">
+                <div class="card-header bg-info">
+                    <h5 class="page-title text-white float-left">Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Name <small class="text-danger">required</small></label>
+                                <input class="form-control" name="name" id="name" type="text" value="{{ gem.name }}">
+                                <small>A simple, human-readable name to use as an identifier for this gem.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="uuid">UUID</label>
+                                <input class="form-control" name="uuid" id="uuid" type="text" value="{{ gem.uuid }}" disabled="disabled">
+                                <small>This is the globally unique identifier for this Egg which the Daemon uses as an identifier.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="docker">Docker Images <small class="text-danger">required</small></label>
+                                <textarea class="form-control" name="docker" id="docker" type="text" rows="5">{% for key, value in gem.json.docker_images.items %}{{ key }}|{{ value }}{% if not forloop.last %}&#10;{% endif %}{% endfor %}</textarea>
+                                <small>The docker images available to servers using this gem. Enter one per line. Users will be able to select from this list of images if more than one value is provided. Optionally, a display name may be provided by prefixing the image with the name followed by a pipe character, and then the image URL.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" name="description" id="description" type="text" rows="5">{{ gem.json.description }}</textarea>
+                                <small>A description of this Gem that will be displayed throughout the Panel as needed.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="startup-command">Startup Command <small class="text-danger">required</small></label>
+                                <textarea class="form-control" name="startup-command" id="startup-command" type="text" rows="5">{{ gem.json.startup }}</textarea>
+                                <small>The default startup command that should be used for new servers using this Gem.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card text-dark">
+                <div class="card-header bg-info">
+                    <h5 class="page-title text-white float-left">Process Management</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <p>The following configuration options should not be edited unless you understand how this system works. If wrongly modified it is possible for the daemon to break.</p>
+                        <p>All fields are required unless you select a separate option from the 'Copy Settings From' dropdown, in which case fields may be left blank to use the values from that gem.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="copy-from">Copy Settings From</label>
+                                <select class="custom-select" name="copy-from" id="copy-from">
+                                    <option value="0" selected="selected">None</option>
+                                    {% for gem in gems %}
+                                        <option value="{{ gem.id }}">{{ gem.name }} ({{ gem.author }})</option>
+                                    {% endfor %}
+                                </select>
+                                <small>If you would like to default to settings from another Gem select it from the menu above.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="stop-command">Stop Command</label>
+                                <input class="form-control" name="stop-command" id="stop-command" type="text" value="{{ gem.json.config.stop }}">
+                                <small>The command that should be sent to server processes to stop them gracefully. If you need to send a <span class="badge badge-info">SIGINT</span> you should enter <span class="badge badge-info">^C</span> here.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="logs">Configuration Files</label>
+                                <textarea class="form-control" name="logs" id="logs" rows="5">{{ gem.logs|safe }}</textarea>
+                                <small>This should be a JSON representation of where log files are stored, and whether or not the daemon should be creating custom logs.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="config-files">Log Configuration</label>
+                                <textarea class="form-control" name="config-files" id="config-files" rows="5">{{ gem.files|safe }}</textarea>
+                                <small>This should be a JSON representation of configuration files to modify and what parts should be changed.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="config-files">Start Configuration</label>
+                                <textarea class="form-control" name="config-files" id="config-files" rows="5">{{ gem.startup|safe }}</textarea>
+                                <small>This should be a JSON representation of what values the daemon should be looking for when booting a server to determine completion.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger btn-sm float-left" type="submit" name="delete" id="delete" {% if gem.hoarde.builtin %}disabled="disabled"{% endif %}><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-info btn-info btn-sm m-1 float-right" type="submit" name="save" id="save">Save</button>
+                    <a class="btn btn-info btn-primary btn-sm m-1 float-right" href="{% url 'admin-gem-export' id=gem.id %}"><i class="fas fa-download"></i> Export</a>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="variables" role="tabpanel" aria-labelledby="variables-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="#" class="btn btn-info btn-sm float-right">Add Variable</a>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                {% for variable in gem.json.variables %}
+                    <div class="col-md-6">
+                        <div class="card text-dark">
+                            <div class="card-header bg-info">
+                                <h6 class="card-title text-white">{{ variable.name }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input class="form-control" name="name" id="name" value="{{ variable.name }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <input class="form-control" name="description" id="description" value="{{ variable.description }}" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="environment">Environment Variable</label>
+                                            <input class="form-control" name="environment" id="environment" value="{{ variable.env_variable }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="default">Default Value</label>
+                                            <input class="form-control" name="default" id="default" value="{{ variable.default_value }}" />
+                                        </div>
+                                    </div>
+                                    <small>This variable can be accessed in the startup command by using <span class="badge badge-info">&#123;&#123;{{ variable.env_variable }}&#125;&#125;</span></small>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>Permissions</label>
+                                    <br>
+                                    <div class="form-check form-switch form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="userCanEdit" value="" id="userCanEdit" {% if variable.user_editable %}checked="checked"{% endif %}>
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Users Can Edit
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="userCanView" value="" id="userCanView" {% if variable.user_viewable %}checked="checked"{% endif %}>
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Users Can View
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <button type="submit" name="delete" class="btn btn-danger btn-sm float-left" {% if gem.hoarde.builtin %}disabled="disabled"{% endif %}><i class="fas fa-trash"></i></button>
+                                <button type="submit" name="save-variable" class="btn btn-info btn-sm float-right">Save</button>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="tab-pane fade" id="install" role="tabpanel" aria-labelledby="install-tab">
+            <div class="card text-dark mb-3">
+                <div class="card-header bg-info">
+                    <h4 class="card-title text-white">Installation Script</h4>
+                </div>
+                <textarea class="card-body" id="script" name="script" rows="15">{{ gem.json.scripts.installation.script }}</textarea>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="copy-script-from">Copy Script From</label>
+                                <select class="custom-select" name="copy-script-from" id="copy-script-from">
+                                    <option value="0" selected="selected">None</option>
+                                </select>
+                                <small>If selected, script above will be ignored and script from selected option will be used in place.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="script-container">Script Container</label>
+                                <input class="form-control" name="script-container" id="script-container" value="{{ gem.json.scripts.installation.container }}" />
+                            </div>
+                            <small>Docker container to use when running this script for the server.</small>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="script-command">Script Entrypoint Command</label>
+                                <input class="form-control" name="script-command" id="script-command" value="{{ gem.json.scripts.installation.entrypoint }}" />
+                            </div>
+                            <small>The entrypoint command to use for this script.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <button type="submit" name="save" class="btn btn-info btn-sm float-right">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block footer_scripts %}
+<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/default.min.css"></link>
+<script>
+const editor = CodeMirror.fromTextArea(document.getElementById('script'), {
+    lineNumbers: true,
+    mode: 'text/python',
+    theme: 'default',
+    autoRefresh: true,
+});
+editor.refresh();
+</script>
+{% endblock %}

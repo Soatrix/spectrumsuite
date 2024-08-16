@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.text import slugify
+import os
 
 # Create your models here.
 class Location(models.Model):
@@ -55,3 +57,46 @@ class Database(models.Model):
     node = models.ForeignKey(Node, on_delete=models.CASCADE)
     def __str__(self):
         return f"{self.name} on {self.node.name}"
+
+class Hoarde(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    icon = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    uuid = models.CharField(max_length=32, blank=True, unique=True)
+    author = models.EmailField()
+    builtin = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = uuid.uuid4().hex
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} ({self.author})"
+
+def gem_upload_path(instance, filename):
+    # Convert hoarde name to slug format
+    hoarde_slug = slugify(instance.hoarde.name)
+    # Return the path 'eggs/<slug>/<filename>'
+    return f'gems/{hoarde_slug}/{filename}'
+class Gem(models.Model):
+    hoarde = models.ForeignKey(Hoarde, on_delete=models.CASCADE, related_name="gems")
+    name = models.CharField(max_length=255)
+    uuid = models.CharField(max_length=32, blank=True, unique=True)
+    gem_file = models.FileField(upload_to=gem_upload_path, verbose_name="Egg JSON File")
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = uuid.uuid4().hex
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Delete the file associated with this model instance
+        if self.gem_file:
+            if os.path.isfile(self.gem_file.path):
+                os.remove(self.gem_file.path)
+        # Call the parent class's delete method
+        super().delete(*args, **kwargs)

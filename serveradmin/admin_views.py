@@ -1,12 +1,17 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, View
 from django.contrib.auth.models import User
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, FileResponse, Http404
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.utils.text import slugify
+import glob, ntpath
 from .models import *
-from json import dumps
+from json import dumps, loads
 
 # Create your views here.
 class AdminDashboard404View(LoginRequiredMixin, TemplateView):
@@ -306,4 +311,186 @@ class AdminHoardesView(LoginRequiredMixin, TemplateView):
         context["page_title"] = "Hoardes"
         context["version"] = settings.VERSION
         context["user"] = self.request.user
+        context["hoardes"] = Hoarde.objects.all()
         return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "import" in request.POST:
+            if "gem-file" in request.FILES:
+                if "hoarde" in request.POST:
+                    gemFile = request.FILES.get("gem-file")
+                    gemJson = loads(gemFile.read())
+
+                    name = gemJson["name"]
+                    hoardeID = int(request.POST.get("hoarde"))
+                    hoarde = Hoarde.objects.get(pk=hoardeID)
+
+                    fs = FileSystemStorage()
+                    filename = fs.save(gemFile.name, gemFile)
+
+                    gem = Gem.objects.create(
+                        name=name,
+                        hoarde=hoarde,
+                        gem_file=filename
+                    )
+                    gem.save()
+                    context["hoardes"] = Hoarde.objects.all()
+                    context["success"] = True
+                else:
+                    context["success"] = False
+                    context["error"] = "You must specify a hoarde to add this gem to."
+            else:
+                context["success"] = False
+                context["error"] = "You must upload a file to import."
+
+        return self.render_to_response(context)
+
+class AdminHoardeCreateView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/hoardes-new.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["page_title"] = "Hoardes"
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "name" in request.POST and "description" in request.POST and "author" in request.POST:
+            name = request.POST.get("name")
+            description = request.POST.get("description")
+            author = request.POST.get("author")
+
+            if name != "" and author != "":
+                try:
+                    validate_email(author)
+                except ValidationError:
+                    context["success"] = False
+                    context["error"] = "The author email address is invalid. Please check your input and try again."
+                    return self.render_to_response(context)
+
+                hoarde, created = Hoarde.objects.get_or_create(name=name, author=author, description=description)
+
+                if created:
+                    context["success"] = True
+                else:
+                    context["success"] = False
+                    context["error"] = "A hoarde with that name already exists."
+            else:
+                context["success"] = False
+                context["error"] = "All fields are required."
+
+        return self.render_to_response(context)
+
+class AdminHoardeDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/hoarde-detail.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["hoarde"] = get_object_or_404(Hoarde, id=self.kwargs["id"])
+        context["page_title"] = context["hoarde"].name
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+
+        context["gems"] = context["hoarde"].gems.all()
+        for gem in context["gems"]:
+            with open(gem.gem_file.path, "r") as f:
+                gemJson = loads(f.read())
+                f.close()
+                setattr(gem, "json", gemJson)
+
+        return context
+
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "delete" in request.POST:
+            if not context["hoarde"].builtin:
+                context["hoarde"].delete()
+
+                return redirect("admin-hoardes")
+
+            else:
+                context["error"] = "You cannot delete this hoarde as it is builtin."
+        elif "save" in request.POST:
+            requiredFields = ["name", "author"]
+            fields = ["name", "description", "author"]
+            started = False
+            for field in fields:
+                if field not in request.POST:
+                    if not started:
+                        started = True
+                        context["error"] = "<ul>"
+                    context["error"] = context["error"] + f"<li>{field} is required."
+                elif field in request.POST and field in requiredFields and request.POST.get(field) == "":
+                    print(f"{field} is empty.")
+                    if not started:
+                        context["error"] = "<ul>"
+                        started = True
+                    context["error"] = context["error"] + f"<li>The \"" + field + "\" field is required.</li>"
+            if started:
+                context["error"] = context["error"] + "</ul>"
+            saveRequired = False
+            if not "error" in context:
+                for field in fields:
+                    setattr(context["hoarde"], field, request.POST.get(field))
+                    saveRequired = True
+            if saveRequired:
+                context["hoarde"].save()
+                context["success"] = True
+        return self.render_to_response(context)
+
+class AdminGemDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/gem-detail.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["gem"] = get_object_or_404(Gem, id=self.kwargs["id"])
+        context["gems"] = context["gem"].hoarde.gems.exclude(id=context["gem"].id)
+        context["page_title"] = context["gem"].name
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        with open(context["gem"].gem_file.path, "r") as f:
+            gemJson = loads(f.read())
+            f.close()
+            setattr(context["gem"], "json", gemJson)
+            setattr(context["gem"], "files", dumps(loads(gemJson["config"]["files"]), indent=4))
+            setattr(context["gem"], "logs", dumps(loads(gemJson["config"]["logs"]), indent=4))
+            setattr(context["gem"], "startup", dumps(loads(gemJson["config"]["startup"]), indent=4))
+        return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if "update-gem" in request.POST:
+            if "gem-file" in request.FILES:
+                gemFile = request.FILES.get("gem-file")
+                if gemFile != "":
+                    print(gemFile.name)
+                    if gemFile.name.endswith(".json"):
+                        fs = FileSystemStorage()
+                        filename = fs.save(gemFile.name, gemFile)
+                        context["gem"].gem_file = filename
+                        context["gem"].save()
+                        context["success"] = True
+                    else:
+                        context["success"] = False
+                        context["error"] = "Only *.json files are valid types to be uploaded."
+                else:
+                    context["success"] = False
+                    context["error"] = "There was a problem uploading this file. Please try again."
+            else:
+                context["success"] = False
+                context["error"] = "You must upload a file in order to update the gem."
+                print(request.FILES)
+
+        return self.render_to_response(context)
+
+
+class AdminGemExportView(View):
+    def get(self, request, *args, **kwargs):
+        gem = get_object_or_404(Gem, id=self.kwargs["id"])
+        response = FileResponse(open(gem.gem_file.path, 'rb'), as_attachment=True, filename=ntpath.basename(gem.gem_file.path))
+        return response

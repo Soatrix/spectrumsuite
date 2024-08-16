@@ -1865,6 +1865,10 @@ pre code {
   box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
 }
 
+.form-control::file-selector-button {
+    background-color: rgb(54, 185, 204) !important;
+}
+
 .form-control::-webkit-input-placeholder {
   color: #858796;
   opacity: 1;
@@ -9927,12 +9931,32 @@ a:focus {
     background: rgb(115,102,255);
 }
 
+@media (min-width: 768px) {
+  .bg-gradient-custom {
+    color: #fff;
+    background: rgb(34, 193, 195);
+    background: linear-gradient(100deg, rgba(34, 193, 195, 1) 0%, rgba(104, 253, 45, 1) 100%);
+    border-color: rgb(34, 193, 195);
+    border-color: linear-gradient(100deg, rgba(34, 193, 195, 1) 0%, rgba(104, 253, 45, 1) 100%);
+  }
+}
+
 .bg-gradient-custom-reverse {
 	color: #fff;
 	background: rgba(115,102,255,1);
 	background: linear-gradient(100deg, rgba(115,102,255,1) 0%, rgba(255,108,171,1) 60%);
 	border-color: rgba(115,102,255,1);
 	background: linear-gradient(100deg, rgba(115,102,255,1) 0%, rgba(255,108,171,1) 60%);
+}
+
+@media (min-width: 768px) {
+  .bg-gradient-custom-reverse {
+    color: #fff;
+    background: rgb(34, 193, 195);
+    background: linear-gradient(100deg, rgba(104, 253, 45, 1) 0%, rgba(34, 193, 195, 1) 25%);
+    border-color: rgb(34, 193, 195);
+    border-color: linear-gradient(100deg, rgba(104, 253, 45, 1) 0%, rgba(34, 193, 195, 1) 25%);
+  }
 }
 
 .bg-gradient-primary {

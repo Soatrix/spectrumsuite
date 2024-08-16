@@ -1,0 +1,46 @@
+{% extends "serveradmin/base.html" %}
+{% block page_content %}
+<!-- Page Heading -->
+<div class="row d-sm-flex align-items-center justify-content-between">
+	<div class="col-md-6">
+		<h1 class="h3 mb-0 text-dark"><i class="fas fa-gem"></i> Create Hoarde</h1>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="{% url 'admin-dashboard-home' %}">Admin Dashboard</a></li>
+				<li class="breadcrumb-item"><a href="{% url 'admin-hoardes' %}">Hoardes</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Create Hoarde</li>
+			</ol>
+		</nav>
+	</div>
+    {% if success %}
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">New Hoarde Successfully Created.</h4>
+        <p>Your new hoarde has been successfully created and can be viewed on the <a href="{% url 'admin-hoardes' %}">Hoardes Page</a>.</p>
+    </div>
+    {% elif error %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+</div>
+<form method="post" action="">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input class="form-control" name="name" id="name" type="text" value="">
+    </div>
+    <div class="form-group">
+        <label for="author">Author</label>
+        <input class="form-control" name="author" id="author" type="email" value="">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" name="description" id="description" rows="5"></textarea>
+    </div>
+    <hr>
+    <button class="btn btn-info" type="submit">Add</button>
+</form>
+{% endblock %}
