@@ -17,7 +17,7 @@
 	</div>
 	<p class="mr-4 page-header">This allows you to organize and manage game servers across different geographical regions or data centers for optimized performance and low-latency connections.</p>
 </div>
-<table class="table table-striped table-light table-bordered table-hover">
+<table class="table table-striped {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
 	<thead class="thead-dark">
 		<tr>
 			<th scope="col">Short Code</th>

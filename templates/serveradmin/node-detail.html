@@ -4,7 +4,7 @@
 {% include "serveradmin/node-detail-header.html" %}
 <div class="row card bg-light">
     <div class="card-body">
-        <table class="table table-light table-sm table-borderless rounded-3 overflow-hidden">
+        <table class="table {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-sm table-borderless rounded-3 overflow-hidden">
             <tbody>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Version</code></td>

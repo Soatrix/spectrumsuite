@@ -46,7 +46,7 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active mb-3" id="config" role="tabpanel" aria-labelledby="config-tab">
             <div class="card text-dark">
-                <div class="card-header bg-info">
+                <div class="card-header">
                     <h5 class="page-title text-white float-left">Gem File</h5>
                     <button class="btn btn-danger btn-sm float-right" type="submit" name="update-gem">Update Gem</button>
                 </div>
@@ -59,7 +59,7 @@
             </div>
             <br>
             <div class="card text-dark mb-3">
-                <div class="card-header bg-info">
+                <div class="card-header">
                     <h5 class="page-title text-white float-left">Configuration</h5>
                 </div>
                 <div class="card-body">
@@ -98,7 +98,7 @@
             </div>
             <br>
             <div class="card text-dark">
-                <div class="card-header bg-info">
+                <div class="card-header">
                     <h5 class="page-title text-white float-left">Process Management</h5>
                 </div>
                 <div class="card-body">
@@ -163,7 +163,7 @@
                 {% for variable in gem.json.variables %}
                     <div class="col-md-6">
                         <div class="card text-dark">
-                            <div class="card-header bg-info">
+                            <div class="card-header">
                                 <h6 class="card-title text-white">{{ variable.name }}</h6>
                             </div>
                             <div class="card-body">
@@ -208,7 +208,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer bg-white">
+                            <div class="card-footer">
                                 <button type="submit" name="delete" class="btn btn-danger btn-sm float-left" {% if gem.hoarde.builtin %}disabled="disabled"{% endif %}><i class="fas fa-trash"></i></button>
                                 <button type="submit" name="save" class="btn btn-custom-primary btn-sm float-right">Save</button>
                             </div>
@@ -220,7 +220,7 @@
         </div>
         <div class="tab-pane fade" id="install" role="tabpanel" aria-labelledby="install-tab">
             <div class="card text-dark mb-3">
-                <div class="card-header bg-info">
+                <div class="card-header">
                     <h4 class="card-title text-white">Installation Script</h4>
                 </div>
                 <textarea class="card-body" id="script" name="script" rows="15">{{ gem.json.scripts.installation.script }}</textarea>
@@ -251,7 +251,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer bg-white">
+                <div class="card-footer">
                     <button type="submit" name="save" class="btn btn-custom-primary btn-sm float-right">Save</button>
                 </div>
             </div>
