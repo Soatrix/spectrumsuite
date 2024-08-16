@@ -8,55 +8,55 @@
             <tbody>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Version</code></td>
-                    <td><code class="badge bg-gray-200 text-dark" id="version"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark" id="version"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Docker Version</code></td>
-                    <td><code class="badge bg-gray-200 text-dark" id="docker-version"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark" id="docker-version"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Network Driver</code></td>
-                    <td><code class="badge bg-gray-200 text-dark" id="docker-network"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark" id="docker-network"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">OS</code></td>
-                    <td><code class="badge bg-gray-200 text-dark" id="os-info"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark" id="os-info"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Architecture</code></td>
-                    <td><code class="badge bg-gray-200 text-dark" id="os-arch"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark" id="os-arch"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Hostname</code></td>
-                    <td><code class="badge bg-gray-200 text-dark" id="os-host"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark" id="os-host"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Status</code></td>
-                    <td><code class="badge bg-gray-200 text-dark node-status" id="status-info"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark node-status" id="status-info"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Swap Support</code></td>
-                    <td><code class="badge bg-gray-200 text-dark node-status" id="swap-support"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark node-status" id="swap-support"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Total Containers</code></td>
-                    <td><code class="badge bg-gray-200 text-dark node-status" id="containers-total"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark node-status" id="containers-total"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Unmanaged Containers</code></td>
-                    <td><code class="badge bg-gray-200 text-dark node-status" id="containers-unmanaged"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark node-status" id="containers-unmanaged"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Paused Containers</code></td>
-                    <td><code class="badge bg-gray-200 text-dark node-status" id="containers-paused"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark node-status" id="containers-paused"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Running Containers</code></td>
-                    <td><code class="badge bg-gray-200 text-dark node-status" id="containers-running"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark node-status" id="containers-running"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
                 <tr>
                     <td style="width: 35%;"><code class="text-dark">Stopped Containers</code></td>
-                    <td><code class="badge bg-gray-200 text-dark node-status" id="containers-stopped"><i class="fas fa-spinner fa-pulse"></i></code></td>
+                    <td><code class="badge badge-custom text-dark node-status" id="containers-stopped"><i class="fas fa-spinner fa-pulse"></i></code></td>
                 </tr>
             </tbody>
         </table>
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.daemon.version.endsWith('DEV')) {
                     version.classList.add('text-warning');
                     version.textContent = data.daemon.version;
-                    version.insertAdjacentHTML('afterend', ' <span class="badge bg-gray-200 text-danger">Warning: Development builds are not recommended for production use and have limited support.</span>');
+                    version.insertAdjacentHTML('afterend', ' <span class="badge badge-custom text-danger">Warning: Development builds are not recommended for production use and have limited support.</span>');
                 } else {
                     version.classList.add('text-success');
                     version.textContent = data.daemon.version;
