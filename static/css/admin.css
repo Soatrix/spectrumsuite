@@ -4914,6 +4914,11 @@ a.badge:hover, a.badge:focus {
   border-radius: 10rem;
 }
 
+.badge-custom {
+	color: var(--text-color);
+    background: var(--body-bg-alt);
+}
+
 .badge-primary {
   color: #fff;
   background-color: #4e73df;
