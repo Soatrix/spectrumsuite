@@ -16,6 +16,11 @@ ADMIN_MENU = [
                 "icon": "folder-tree",
                 "label": "Resources",
                 "link": "projectadmin-projects"
+            },
+            {
+                "icon": "hand-holding-dollar",
+                "label": "Funding Requests",
+                "link": "projectadmin-projects"
             }
         ]
     }
