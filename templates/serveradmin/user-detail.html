@@ -25,7 +25,7 @@
         </div>
         {% if success %}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Gem Updated!</strong><br> The gem has been successfully updated.
+                <strong>User Updated!</strong><br> This users information was successfully updated.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -49,36 +49,36 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input class="form-control" name="email" id="email" value="{{ adminUser.email }}"/>
+                                <label for="email">Email Address <small class="text-danger">required</small></label>
+                                <input class="form-control" name="email" id="email" value="{{ adminUser.email }}" {% if user == adminUser %}disabled="disabled"{% endif %}/>
                             </div>
                             <div class="form-group">
-                                <label for="email">Username</label>
-                                <input class="form-control" name="username" id="username" value="{{ adminUser.username }}"/>
+                                <label for="email">Username <small class="text-danger">required</small></label>
+                                <input class="form-control" name="username" id="username" value="{{ adminUser.username }}"{% if user == adminUser %}disabled="disabled"{% endif %}/>
                             </div>
                             <div class="form-group">
-                                <label for="first_name">First Name</label>
-                                <input class="form-control" name="first_name" id="first_name" value="{{ adminUser.first_name }}"/>
+                                <label for="first_name">First Name <small class="text-danger">required</small></label>
+                                <input class="form-control" name="first_name" id="first_name" value="{{ adminUser.first_name }}"{% if user == adminUser %}disabled="disabled"{% endif %}/>
                             </div>
                             <div class="form-group">
-                                <label for="last_name">Last Name</label>
-                                <input class="form-control" name="last_name" id="last_name" value="{{ adminUser.last_name }}"/>
+                                <label for="last_name">Last Name <small class="text-danger">required</small></label>
+                                <input class="form-control" name="last_name" id="last_name" value="{{ adminUser.last_name }}"{% if user == adminUser %}disabled="disabled"{% endif %}/>
                             </div>
                         </div>
                         <div class="card-footer bg-white">
-                            <btn class="btn btn-info float-right">Update User</btn>
+                            <button type="submit" name="update" class="btn btn-custom-primary float-right" {% if user == adminUser %}disabled="disabled"{% endif %}>Update User</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card text-dark mb-3">
                         <div class="card-header bg-info">
-                            <h5 class="page-title text-white">Password <small class="text-gray-500">optional</small></h5>
+                            <h5 class="page-title text-white">Password <small class="text-gray-300">optional</small></h5>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input class="form-control" name="password" id="password" type="password"/>
+                                <input class="form-control" name="password" id="password" type="password" {% if user == adminUser %}disabled="disabled"{% endif %}/>
                                 <small>Leave blank to keep this user's password the same. User will not receive any notification if password is changed.</small>
                             </div>
                         </div>
@@ -90,10 +90,30 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="password" name="password" {% if adminUser.is_superuser %}checked="checked"{% endif %}>
+                                    <input class="form-check-input" type="checkbox" role="switch" id="password" name="password" {% if adminUser.is_superuser %}checked="checked"{% endif %} {% if user == adminUser %}disabled="disabled"{% endif %}>
                                     <label class="form-check-label" for="password">Administrator Access</label>
                                 </div>
                                 <small>Enabling this setting gives a user full administrative access to the enire panel and all connected servers and nodes.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card text-dark mb-3">
+                        <div class="card-header bg-info">
+                            <h5 class="page-title text-white">Themes & Customization</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="theme">Current Theme:</label>
+                                <select class="form-select" name="theme" id="theme" {% if user == adminUser %}disabled="disabled"{% endif %}>
+                                    <option value="default" selected="selected">Default Theme</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="dark-mode" name="dark-mode" {% if user == adminUser %}disabled="disabled"{% endif %}>
+                                    <label class="form-check-label" for="password">Dark Mode Enabled</label>
+                                    <small>This enables the dark mode version of the theme to conserve power usage.</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -119,7 +139,29 @@
             </div>
         </div>
         <div class="tab-pane fade" id="servers" role="tabpanel" aria-labelledby="servers-tab">
-
+            <table class="table table-striped table-light table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Server Name</th>
+                        <th scope="col">UUID</th>
+                        <th scope="col">Node</th>
+                        <th scope="col"><i class="fas fa-heart-pulse d-block text-center align-text-top pb-1"></i></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for server in servers %}
+                        <tr>
+                            <td>{{ server.name }}</td>
+                            <td><span class="badge badge-info">{{ server.uuid }}</span></td>
+                            <td><a href="{% url 'admin-node-detail' id=server.node.id %}">{{ server.node.name }}</a></td>
+                            <td><span class="badge badge-info">{% if server.default_allocation.alias %}{{ server.default_allocation.alias }}{% else %}{{ server.default_allocation.address }}{% endif %}:{{ server.default_allocation.port }}</span></td>
+                            <td><span class="badge badge-danger">Offline</span></td>
+                            <td><span class="badge badge-secondary"><i class="fas fa-wrench fa-sm"></i></span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 </div>
 </form>

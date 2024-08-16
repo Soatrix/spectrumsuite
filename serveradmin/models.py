@@ -111,7 +111,7 @@ class Server(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="servers")
     uuid = models.CharField(max_length=32, unique=True, blank=True)
     node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name="servers")
-    default_allocation = models.ForeignKey(Allocation, on_delete=models.CASCADE, related_name="servers")
+    default_allocation = models.OneToOneField(Allocation, on_delete=models.CASCADE, related_name="servers")
     additional_allocations = models.ManyToManyField(Allocation)
     database_limit = models.PositiveIntegerField(default=0, help_text="Database limit")
     allocation_limit = models.PositiveIntegerField(default=0, help_text="Allocation limit")
@@ -139,3 +139,19 @@ class Server(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.uuid})"
+
+class Theme(models.Model):
+    name = models.CharField(max_length=255)
+    light_css = models.TextField(blank=True)
+    dark_css = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+    dark_mode = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username

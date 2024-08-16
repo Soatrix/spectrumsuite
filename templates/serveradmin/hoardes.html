@@ -13,8 +13,8 @@
             </nav>
         </div>
         <div class="col-md-6">
-            <a href="{% url 'admin-hoardes-create' %}" class="float-right d-none d-sm-inline-block btn btn-sm btn-info shadow-sm m-1">Create Hoarde <i class="fas fa-plus fa-sm text-white-50"></i></a>
-            <a href="#" class="float-right d-none d-sm-inline-block btn btn-sm btn-success shadow-sm m-1" data-toggle="modal" data-target="#importModal">Import Gem <i class="fas fa-upload fa-sm text-white-50"></i></a>
+            <a href="{% url 'admin-hoardes-create' %}" class="float-right d-none d-sm-inline-block btn btn-sm btn-custom-primary shadow-sm m-1">Create Hoarde <i class="fas fa-plus fa-sm text-white-50"></i></a>
+            <a href="#" class="float-right d-none d-sm-inline-block btn btn-sm btn-custom-secondary shadow-sm m-1" data-toggle="modal" data-target="#importModal">Import Gem <i class="fas fa-upload fa-sm text-white-50"></i></a>
         </div>
         <p class="p-1 mr-4 page-header">This allows you to manage database hosts for user creation and associated nodes.</p>
 
@@ -100,7 +100,7 @@
                         </div>
                         <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <button class="btn btn-success" name="import" type="submit">Import</button>
+                                <button class="btn btn-custom-secondary" name="import" type="submit">Import</button>
                         </div>
                     </div>
                 </form>

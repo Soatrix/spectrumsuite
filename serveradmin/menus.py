@@ -38,6 +38,16 @@ ADMIN_MENU = [
                 "link": "admin-hoardes"
             }
         ]
+    },
+    {
+        "name": "Panel Management",
+        "items": [
+            {
+                "icon": "palette",
+                "label": "Themes",
+                "link": "admin-themes"
+            }
+        ]
     }
 ]
 

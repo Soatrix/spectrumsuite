@@ -573,3 +573,48 @@ class AdminUserDetailView(LoginRequiredMixin, TemplateView):
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "update" in request.POST:
+            fields = ["email", "username", "first_name", "last_name", "password"]
+            started = False
+            for field in fields:
+                if field not in request.POST:
+                    if not started:
+                        started = True
+                        context["error"] = "<ul>"
+                    context["error"] = context["error"] + f"<li>The \"" + field + "\" field is required.</li>"
+                elif field in request.POST and request.POST.get(field) == "":
+                    if not started:
+                        context["error"] = "<ul>"
+                        started = True
+                    context["error"] = context["error"] + f"<li>The \"" + field + "\" field is required.</li>"
+            if started:
+                context["error"] = context["error"] + "</ul>"
+            if context["user"] == context["adminUser"]:
+                context["success"] = False
+                context["error"] = "You cannot edit your own account here. Please visit your account page to edit your own information."
+            if not "error" in context:
+                user = context["adminUser"]
+                for field in fields:
+                    if field == "password" and request.POST.get(field) == "":
+                        continue
+                    else:
+                        setattr(user, field, request.POST.get(field))
+                user.save()
+                context["success"] = True
+
+        return self.render_to_response(context)
+
+class AdminThemesView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/themes.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["page_title"] = "Themes"
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        context["themes"] = Theme.objects.all()
+        return context
