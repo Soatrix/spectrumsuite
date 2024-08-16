@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
-    "https://goblinpanel.havenmarket.net"
+    "https://spectrumsuite.havenmarket.net"
 ]
 
 
