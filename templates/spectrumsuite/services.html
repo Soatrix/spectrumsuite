@@ -71,7 +71,29 @@
             </div>
         </div>
         <div class="tab-pane fade" id="service-categories" role="tabpanel" aria-labelledby="service-categories-tab">
-
+            <div class="card text-dark">
+                <div class="card-header">
+                    <h5 class="card-title text-white float-left">Service Categories</h5>
+                </div>
+                <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td>{{ category.name }}</td>
+                                <td>{{ category.description }}</td>
+                                <td><a href="#" class="badge badge-custom"><i class="fas fa-wrench"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 </div>
 </form>
