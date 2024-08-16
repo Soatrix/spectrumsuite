@@ -15,7 +15,7 @@ ADMIN_MENU = [
             {
                 "icon": "hands-holding-child",
                 "label": "Services",
-                "link": "projectadmin-projects"
+                "link": "spectrumadmin-services"
             },
             {
                 "icon": "folder-tree",
