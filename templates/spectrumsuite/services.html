@@ -61,7 +61,7 @@
                     <tbody>
                         {% for service in services %}
                             <tr>
-                                <td>{{ service.name }}</td>
+                                <td><a href="{% url 'spectrumadmin-service-detail' id=service.id %}">{{ service.name }}</a></td>
                                 <td><span class="badge badge-custom">{{ service.category.name }}</span></td>
                                 <td><span class="badge badge-{% if service.active %}success{% else %}danger{% endif %}">{% if service.active %}Active{% else %}Not Active{% endif %}</span></td>
                                 <td>{{ service.contact_phone_number }}</td>

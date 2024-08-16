@@ -1,0 +1,40 @@
+{% extends "serveradmin/base.html" %}
+{% block page_content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-dark"><i class="fas fa-hands-holding-child"></i> {{ service.name }}</h1>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			{% url 'admin-dashboard-home' as url %}
+			<li class="breadcrumb-item"><a href="{{ url }}">Admin Dashboard</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'spectrumadmin-services' %}">Services</a></li>
+			<li class="breadcrumb-item active" aria-current="page">{{ service.name }}</li>
+		</ol>
+	</nav>
+</div>
+<div class="row">
+    <div class="col-md-7">
+        <div class="card text-dark">
+            <div class="card-header">
+                <h5 class="card-title text-white">Service Information</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ service.description }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card text-dark">
+            <div class="card-header">
+                <h5 class="card-title text-white">Contact Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="phone-number">Phone Number</label>
+                    <input class="form-control" name="phone-number" id="phone-number" disabled="disabled" value="{{ service.phone_number }}" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
