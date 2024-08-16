@@ -159,13 +159,13 @@ sup {
 }
 
 a {
-  color: #66cd00;
+  color: var(--bg-secondary);
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: #00cbff;
+  color: var(--bg-secondary-alt);
   text-decoration: none;
 }
 
@@ -1834,9 +1834,9 @@ pre code {
   font-weight: 400;
   line-height: 1.5;
   color: #6e707e;
-  background-color: #fff;
+  background-color: var(--body-bg-alt);
   background-clip: padding-box;
-  border: 1px solid #d1d3e2;
+  border: 1px solid var(--body-bg-alt);
   border-radius: 0.35rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -1895,7 +1895,8 @@ pre code {
 }
 
 .form-control:disabled, .form-control[readonly] {
-  background-color: #eaecf4;
+  background-color: var(--body-bg-alt);
+  border-color: var(--body-bg-alt);
   opacity: 1;
 }
 
@@ -3382,9 +3383,9 @@ input[type="button"].btn-block {
 }
 
 .form-select:disabled {
-  background-color: #eaecf4;
-  color: #6e707e;
-  border: 1px solid #d1d3e2;
+  background-color: var(--body-bg-alt);
+  color: var(--text-color);
+  border: 1px solid var(--body-bg-alt);
 }
 
 .input-group {
@@ -4074,6 +4075,8 @@ input[type="button"].btn-block {
 }
 
 .nav-tabs .nav-link {
+  color: var(--bg-primary);
+  background: var(--bg-color);
   margin-bottom: -1px;
   border: 1px solid transparent;
   border-top-left-radius: 0.35rem;
@@ -4081,7 +4084,8 @@ input[type="button"].btn-block {
 }
 
 .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
-  border-color: #eaecf4 #eaecf4 #dddfeb;
+  color: var(--bg-primary-alt);
+  background: var(--bg-color);
 }
 
 .nav-tabs .nav-link.disabled {
@@ -4092,9 +4096,9 @@ input[type="button"].btn-block {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: #6e707e;
-  background-color: #fff;
-  border-color: #dddfeb #dddfeb #fff;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border-color: var(--bg-color);
 }
 
 .nav-tabs .dropdown-menu {
@@ -4526,6 +4530,7 @@ input[type="button"].btn-block {
   background-clip: border-box;
   border: 1px solid var(--bg-color)!important;
   border-radius: 0.35rem;
+  color: var(--text-color)!important;
 }
 
 .card > hr {
@@ -4595,8 +4600,9 @@ input[type="button"].btn-block {
 
 .card-footer {
   padding: 0.75rem 1.25rem;
-  background-color: #f8f9fc;
-  border-top: 1px solid #e3e6f0;
+  background-color: var(--bg-color)!important;
+  border-top: 1px solid var(--bg-color)!important;
+  color: var(--text-color)!important;
 }
 
 .card-footer:last-child {
@@ -10877,7 +10883,7 @@ p.page-header {
 }
 
 .card .card-header{
-  background: var(--bg-primary)!important;
+  background: var(--bg-primary);
 }
 
 .card .card-header .dropdown {
@@ -11359,6 +11365,7 @@ form.user .btn-user {
 footer.sticky-footer {
   padding: 2rem 0;
   flex-shrink: 0;
+  background: var(--bg-color);
 }
 
 footer.sticky-footer .copyright {

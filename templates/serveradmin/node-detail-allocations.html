@@ -4,7 +4,7 @@
 {% include "serveradmin/node-detail-header.html" %}
 <form method="post" action="">
 	{% csrf_token %}
-	<table class="table table-light p-3">
+	<table class="table {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} p-3">
 		<thead class="thead-dark">
 			<tr>
 				<th style="width: 30.33%;">IP/Address</th>
