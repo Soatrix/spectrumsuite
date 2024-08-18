@@ -11370,10 +11370,10 @@ form.user .btn-user {
 }
 
 footer.sticky-footer {
-  padding: 2rem 0;
+  height: 5rem;
   flex-shrink: 0;
   background: var(--bg-color);
-  position: absolute;
+  position: relative;
   bottom: 0;
   width: 100%;
 }
@@ -11381,6 +11381,11 @@ footer.sticky-footer {
 footer.sticky-footer .copyright {
   line-height: 1;
   font-size: 0.8rem;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 body.sidebar-toggled footer.sticky-footer {
