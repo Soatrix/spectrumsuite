@@ -1,3 +1,5 @@
+from pydoc import describe
+
 from django.db import IntegrityError
 from django.shortcuts import render
 from django.views.generic import TemplateView, View
@@ -9,7 +11,6 @@ from .models import *
 # Create your views here.
 class AdminServicesView(LoginRequiredMixin, TemplateView):
     template_name = "spectrumsuite/services.html"
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
@@ -123,4 +124,60 @@ class AdminServiceDetailView(LoginRequiredMixin, TemplateView):
             context["service"].delete()
             return redirect("spectrumadmin-services")
         context["service"] = get_object_or_404(Service, id=self.kwargs["id"])
+        return self.render_to_response(context)
+
+class AdminServiceCreateView(LoginRequiredMixin, TemplateView):
+    template_name = "spectrumsuite/service-create.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["categories"] = ServiceCategory.objects.all()
+        context["page_title"] = "Add Service"
+        context["PROJECT_NAME"] = settings.NAME
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if "create" in request.POST:
+            requiredFields = ["name", "category", "contact-phone", "contact-email"]
+            fields = ["name", "category", "contact-phone", "contact-email", "description", "address"]
+            started = False
+            for field in fields:
+                if field not in request.POST:
+                    if not started:
+                        started = True
+                        context["error"] = "<ul>"
+                    context["error"] = context["error"] + f"<li>{field} is required."
+                elif field in request.POST and field in requiredFields and request.POST.get(field) == "":
+                    if not started:
+                        context["error"] = "<ul>"
+                        started = True
+                    context["error"] = context["error"] + f"<li>The \"" + field + "\" field is required.</li>"
+            if started:
+                context["error"] = context["error"] + "</ul>"
+            if not "error" in context:
+                name = request.POST.get("name")
+                description = request.POST.get("description")
+                contact_phone = request.POST.get("contact-phone")
+                contact_email = request.POST.get("contact-email")
+                categoryID = request.POST.get("category")
+                category = get_object_or_404(ServiceCategory, id=int(categoryID))
+                address = request.POST.get("address")
+
+                service, created = Service.objects.get_or_create(
+                    name=name,
+                    description=description,
+                    contact_phone=contact_phone,
+                    contact_email=contact_email,
+                    category=category,
+                    address=address
+                )
+
+                if created:
+                    return redirect("spectrumadmin-services")
+                else:
+                    context["success"] = False
+                    context["error"] = "That service already exists. View it <a href='{% url 'spectrumadmin-service-detail' id=" + service.id + " %}'>here</a>"
+
         return self.render_to_response(context)

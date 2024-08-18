@@ -45,7 +45,7 @@
             <div class="card text-dark">
                 <div class="card-header">
                     <h5 class="card-title text-white float-left">Available Services</h5>
-                    <a class="btn btn-custom-secondary ml-auto float-right" id="add-service-tab" href="#"><i class="fas fa-plus"></i> Add Service</a>
+                    <a class="btn btn-custom-secondary ml-auto float-right" id="add-service-tab" href="{% url 'spectrumadmin-service-create' %}"><i class="fas fa-plus"></i> Add Service</a>
                 </div>
                 <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
                     <thead class="thead-dark">
