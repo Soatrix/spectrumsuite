@@ -27,9 +27,32 @@
             <div class="card-header">
                 <h5 class="card-title text-white">Notes</h5>
             </div>
-            <div class="card-body">
-                <p>{% if service.notes %}{{ service.notes }}{% else %}No notes yet.{% endif %}</p>
-            </div>
+            <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col"><i class="fas fa-calendar d-block text-center align-text-top pb-1"></i></th>
+                        <th scope="col"><i class="fas fa-user d-block text-center align-text-top pb-1"></i></th>
+                        <th scope="col">Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if service.notes.count > 0 %}
+                        {% for note in service.notes.all %}
+                            <tr>
+                                <td><span class="badge bg-secondary">{{ note.created }}</span></td>
+                                <td><span class="badge bg-secondary">{{ note.author.username }}</span></td>
+                                <td>{{ note.note }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>No notes added yet.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="col-md-5">

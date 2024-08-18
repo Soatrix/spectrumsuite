@@ -25,11 +25,15 @@ class Service(models.Model):
     contact_email = models.EmailField(blank=True)
     contact_phone_number = models.CharField(max_length=15, blank=True)
     active = models.BooleanField(default=True)
-    notes = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 
+class ServiceNote(models.Model):
+    note = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="notes")
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="notes")
+    created = models.DateField(auto_now=True)
 
 class Client(models.Model):
     first_name = models.CharField(max_length=100)
