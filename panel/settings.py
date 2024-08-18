@@ -137,7 +137,7 @@ handler404 = "serveradmin.admin_views.AdminDashboard404View"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Panel Settings
-NAME = "Project Pulse"
+NAME = "Spectrum Suite"
 VERSION = "0.0.2-DEV"
 
 # Menu Settings
