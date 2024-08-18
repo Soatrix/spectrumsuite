@@ -1,9 +1,9 @@
 {% extends "serveradmin/base.html" %}
+{% load date_filters %}
+{% load money_filters %}
 {% block page_content %}
 <form action="" method="post">
     {% csrf_token %}
-    <div class="row d-sm-flex align-items-center justify-content-between mb-4">
-        <div class="col-md-6">
             <h1 class="h3 mb-0 text-dark"><i class="fas fa-users-rays"></i> {{ page_title }}</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -12,10 +12,8 @@
                     <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
                 </ol>
             </nav>
-        </div>
-        <div class="col-md-6">
-            <div class="d-flex justify-content-between align-items-center">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <div class="row d-flex float-right mb-3">
+                <ul class="nav nav-tabs justify-content-end" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
                     </li>
@@ -25,9 +23,25 @@
                     <li class="nav-item">
                         <a class="nav-link" id="education-tab" data-toggle="tab" href="#education" role="tab" aria-controls="education" aria-selected="false">Education</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="employment-tab" data-toggle="tab" href="#employment" role="tab" aria-controls="employment" aria-selected="false">Employment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="services-tab" data-toggle="tab" href="#services" role="tab" aria-controls="services" aria-selected="false">Support Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="finance-tab" data-toggle="tab" href="#finance" role="tab" aria-controls="finance" aria-selected="false">Finance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false">Documents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="edit-tab" href="#">Edit Profile</a>
+                    </li>
                 </ul>
-            </div>
-        </div>
         {% if success %}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>{{ object }} Updated!</strong><br> The {{ object }} was successfully {{ action }}.
@@ -48,20 +62,295 @@
         <div class="tab-pane fade show active mb-3" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div class="row">
                 <div class="col-md-7">
-                    <div class="card text-dark">
+                    <div class="card text-dark mb-3">
                         <div class="card-header">
                             <h5 class="card-title text-white float-left">Personal Information</h5>
                         </div>
                         <div class="card-body">
-
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name</label>
+                                        <input class="form-control" name="first_name" id="first_name" value="{{ client.first_name }}" disabled="disabled" />
+                                     </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="last_name">Last Name</label>
+                                        <input class="form-control" name="last_name" id="last_name" value="{{ client.last_name }}" disabled="disabled" />
+                                     </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label for="birthdate">Date of Birth</label>
+                                        <input class="form-control" name="birthdate" id="birthdate" value="{{ client.date_of_birth }}" disabled="disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="age">Current Age</label>
+                                        <input class="form-control" name="age" id="age" value="{{ client.date_of_birth|detailed_age }}" disabled="disabled" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card text-dark mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Profile Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="profile-status">Profile Status:</label>
+                                <input class="form-control bg-{% if client.active %}success{% else %}danger{% endif %}" name="profile-status" id="profile-status" value="{% if client.active %}Active{% else %}Not Active{% endif %}" disabled="disabled"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-status">Support Worker:</label>
+                                <input class="form-control" name="profile-status" id="profile-status" value="{% if client.support_worker %}{{ client.support_worker.user.first_name }} {{ client.support_worker.user.last_name }}{% else %}None Assigned{% endif %}" disabled="disabled"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card text-dark mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Sensory Traits</h5>
+                            <span class="badge bg-secondary float-right p-2">Total Traits: {{ client.sensory_issues.count }}</span>
+                        </div>
+                        <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Trait</th>
+                                    <th scope="col">Outcomes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sensory_issue in client.sensory_issues.all %}
+                                    <tr>
+                                        <td>{{ sensory_issue.name }}</td>
+                                        <td>{{ sensory_issue.description }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade mb-3" id="medical" role="tabpanel" aria-labelledby="mmedical-tab">
-
+        <div class="tab-pane fade mb-3" id="medical" role="tabpanel" aria-labelledby="medical-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Medical Conditions</h5>
+                        </div>
+                        <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Condition</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Diagnosed</th>
+                                    <th scope="col">Physical</th>
+                                    <th scope="col">Mental</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for condition in client.medical_conditions.all %}
+                                    <tr>
+                                        <td>{{ condition.name }}</td>
+                                        <td>{{ condition.description }}</td>
+                                        <td class="text-center"><span class="badge badge-{% if condition.diagnosed == 2 %}success{% elif condition.diagnosed == 1 %}secondary"{% else %}danger{% endif %}">{% if condition.diagnosed == 2 %}Diagnosed{% elif condition.diagnosed == 1 %}Suspected{% else %}Undiagnosed{% endif %}</span></td>
+                                        <td class="text-center"><span class="badge badge-{% if condition.physical_disability %}success{% else %}danger{% endif %}"><i class="fas fa-{% if condition.physical_disability %}check{% else %}xmark{% endif %}"></i></span></td>
+                                        <td class="text-center"><span class="badge badge-{% if condition.mental_disability %}success{% else %}danger{% endif %}"><i class="fas fa-{% if condition.mental_disability %}check{% else %}xmark{% endif %}"></i></span></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-</div>
+        <div class="tab-pane fade mb-3" id="education" role="tabpanel" aria-labelledby="education-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Education History</h5>
+                        </div>
+                        <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Institute</th>
+                                    <th scope="col">Study Period</th>
+                                    <th scope="col">Degree</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for education in client.education_records.all %}
+                                    <tr>
+                                        <td><span class="badge bg-secondary">{{ education.institution_name }}</span></td>
+                                        <td>{{ education.start_date }} - {{ education.end_date }}</td>
+                                        <td>{{ education.degree }} ({{ education.field_of_study }})</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade mb-3" id="employment" role="tabpanel" aria-labelledby="employment-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Work History</h5>
+                        </div>
+                        <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Company</th>
+                                    <th scope="col">Employment Period</th>
+                                    <th scope="col">Position</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for employment in client.employment_records.all %}
+                                    <tr>
+                                        <td><span class="badge bg-secondary">{{ employment.company_name }}</span></td>
+                                        <td>{{ employment.start_date }} - {{ employment.end_date }}</td>
+                                        <td>{{ employment.position }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade mb-3" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Contact Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="contact_email">Contact Email Address</label>
+                                <input class="form-control" name="contact_email" id="contact_email" value="{{ client.email }}" disabled="disabled" />
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_phone">Contact Phone Number</label>
+                                <input class="form-control" name="contact_phone" id="contact_phone" value="{{ client.phone_number }}" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card text-dark mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Contact Preference</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="contact_time_method">Preferred Time/Method:</label>
+                                <input class="form-control" name="contact_time_method" id="contact_time_method" value="{{ client.contact_preference.preferred_contact_method }} ({{ client.contact_preference.preferred_contact_time }})" disabled="disabled"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_notes">Notes:</label>
+                                <textarea id="contact_notes" name="contact_notes" class="form-control" disabled="disabled">{% if client.contact_preference.note %}{{ client.contact_preference.note }}{% else %}No notes.{% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% for contact in client.emergency_contacts.all %}
+                    <div class="col-md-12">
+                        <div class="card text-dark mb-3">
+                            <div class="card-header">
+                                <h5 class="card-title text-white float-left">Emergency Contact #{{ forloop.counter }} ({{ contact.name }})</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="contact_relationship_{{ contact.id }}">Relationship</label>
+                                    <input class="form-control" name="contact_relationship_{{ contact.id }}" id="contact_relationship_{{ contact.id }}" value="{{ contact.relationship }}" disabled="disabled" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact_email_{{ contact.id }}">Contact Email Address</label>
+                                    <input class="form-control" name="contact_email_{{ contact.id }}" id="contact_email_{{ contact.id }}" value="{{ contact.email }}" disabled="disabled" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact_phone_{{ contact.id }}">Contact Phone Number</label>
+                                    <input class="form-control" name="contact_phone_{{ contact.id }}" id="contact_phone_{{ contact.id }}" value="{{ contact.phone_number }}" disabled="disabled" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="tab-pane fade mb-3" id="finance" role="tabpanel" aria-labelledby="finance-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Financial Income</h5>
+                            <span class="badge bg-secondary float-right p-2">Total Income: ${{ client.financial_information.all|total }}</span>
+                        </div>
+                        <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Source</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Frequency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for income in client.financial_information.all %}
+                                    <tr>
+                                        <td><span class="badge bg-secondary">{{ income.source }}</span></td>
+                                        <td>${{ income.income }}</td>
+                                        <td>{{ income.frequency }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade mb-3" id="services" role="tabpanel" aria-labelledby="services-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h5 class="card-title text-white float-left">Connected Support Services</h5>
+                            <span class="badge bg-secondary float-right p-2">Total Services: {{ client.connected_services.count }}</span>
+                        </div>
+                        <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in client.connected_services.all %}
+                                    <tr>
+                                        <td><a href="{% url 'spectrumadmin-service-detail' id=service.id %}">{{ service.name }}</a></td>
+                                        <td><span class="badge bg-secondary">{{ service.category.name }}</span></td>
+                                        <td>{{ service.description }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock %}

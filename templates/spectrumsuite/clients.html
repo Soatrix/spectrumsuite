@@ -4,11 +4,11 @@
     {% csrf_token %}
     <div class="row d-sm-flex align-items-center justify-content-between mb-4">
         <div class="col-md-12">
-            <h1 class="h3 mb-0 text-dark"><i class="fas fa-users-rays"></i> All Clients</h1>
+            <h1 class="h3 mb-0 text-dark"><i class="fas fa-users-rays"></i> Clients</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'admin-dashboard-home' %}">Admin Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">All Clients</li>
+                    <li class="breadcrumb-item active" aria-current="page">Clients</li>
                 </ol>
             </nav>
         </div>
@@ -40,6 +40,7 @@
                         <th scope="col">DOB</th>
                         <th scope="col">Support Worker</th>
                         <th class="text-center" scope="col">Connected Services</th>
+                        <th scope="col">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +50,7 @@
                             <td><span class="badge bg-secondary">{{ client.date_of_birth }}</span></td>
                             <td>{% if client.support_worker %}<a href="#">{{ client.support_worker.first_name }} {{ client.support_worker.last_name }}</a>{% else %}No Support Worker Assigned{% endif %}</td>
                             <td class="text-center"><span class="badge bg-secondary">{{ client.connected_services.count }}</span></td>
+                            <td clas="text-center"><span class="badge badge-{% if client.active %}success{% else %}danger{% endif %}">{% if client.active %}Active{% else %}Not Active{% endif %}</span></td>
                         </tr>
                     {% endfor %}
                 </tbody>

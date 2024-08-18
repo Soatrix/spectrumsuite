@@ -59,7 +59,7 @@ class Client(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class EmergencyContact(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="emergency_contacts")
     name = models.CharField(max_length=100)
     relationship = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
@@ -73,7 +73,7 @@ class MedicalCondition(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='medical_conditions')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    diagnosed = models.BooleanField(default=True)
+    diagnosed = models.IntegerField(max_length=1, default=0)
     physical_disability = models.BooleanField(default=False)
     mental_disability = models.BooleanField(default=False)
 
@@ -124,12 +124,11 @@ class ContactPreference(models.Model):
     def __str__(self):
         return f"Preferred contact method for {self.client}"
 
-class FinancialInformation(models.Model):
-    client = models.OneToOneField(Client, on_delete=models.CASCADE, related_name='financial_information')
-    income_source = models.CharField(max_length=100)
-    monthly_income = models.DecimalField(max_digits=12, decimal_places=2)
-    benefits_received = models.TextField(blank=True)
-    expenses = models.TextField(blank=True)
+class FinancialIncome(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='financial_information')
+    source = models.CharField(max_length=100)
+    income = models.DecimalField(max_digits=12, decimal_places=2)
+    frequency = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"Financial info for {self.client}"

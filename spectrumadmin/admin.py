@@ -5,6 +5,10 @@ class EmergencyContactInline(admin.TabularInline):
     model = EmergencyContact
     extra = 1  # Number of empty forms to display; adjust as needed
 
+class MedicalConditionInline(admin.TabularInline):
+    model = MedicalCondition
+    extra = 1
+
 class MedicationInline(admin.TabularInline):
     model = Medication
     extra = 1  # Number of empty forms to display; adjust as needed
@@ -21,8 +25,8 @@ class ContactPreferenceInline(admin.TabularInline):
     model = ContactPreference
     extra = 1  # Number of empty forms to display; adjust as needed
 
-class FinancialInformationInline(admin.TabularInline):
-    model = FinancialInformation
+class FinancialIncomeInline(admin.TabularInline):
+    model = FinancialIncome
     extra = 1  # Number of empty forms to display; adjust as needed
 
 @admin.register(Client)
@@ -30,11 +34,12 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'date_of_birth', 'email', 'phone_number')
     inlines = [
         EmergencyContactInline,
+        MedicalConditionInline,
         MedicationInline,
         EducationInline,
         EmploymentInline,
         ContactPreferenceInline,
-        FinancialInformationInline,
+        FinancialIncomeInline,
     ]
 
 # Register other models
