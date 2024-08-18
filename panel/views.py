@@ -15,6 +15,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.FRONT_MENU
         context['page_title'] = 'Dashboard'
+        context["PROJECT_NAME"] = settings.NAME
         context['version'] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -25,6 +26,7 @@ class AccountView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.FRONT_MENU
         context['page_title'] = 'Account'
+        context["PROJECT_NAME"] = settings.NAME
         context['version'] = settings.VERSION
         context["user"] = self.request.user
         return context
