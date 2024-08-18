@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.conf import settings
 from .models import *
 
@@ -50,5 +50,12 @@ class AdminServiceDetailView(LoginRequiredMixin, TemplateView):
             note = get_object_or_404(ServiceNote, id=int(noteID))
             note.delete()
             context["success"] = True
+        elif "serviceStatus" in request.POST:
+            context["service"].active = not context["service"].active
+            context["service"].save()
+            context["success"] = True
+        elif "deleteService" in request.POST:
+            context["service"].delete()
+            return redirect("spectrumadmin-services")
         context["service"] = get_object_or_404(Service, id=self.kwargs["id"])
         return self.render_to_response(context)

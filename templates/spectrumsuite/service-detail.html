@@ -138,14 +138,14 @@
                             <div class="form-group">
                                 <label for="name">Update Status</label>
                                 <br>
-                                <button type="submit" class="btn btn-block btn-{% if service.active %}warning{% else %}success{% endif %}" name="serviceStatus" id="serviceStatus" value="{{ service.name }}">Mark {% if service.active %}Inactive{% else %}Active{% endif %}</button>
+                                <button type="submit" class="btn btn-block btn-{% if service.active %}danger{% else %}success{% endif %}" name="serviceStatus" id="serviceStatus">Mark {% if service.active %}Inactive{% else %}Active{% endif %}</button>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">Delete Service</label>
                                 <br>
-                                <button type="submit" class="btn btn-block btn-danger" name="serviceStatus" id="serviceStatus" value="{{ service.id }}">Delete Service</button>
+                                <a href="#" class="float-end d-none d-sm-inline-block btn btn-danger btn-block shadow-sm" data-toggle="modal" data-target="#deleteModal">Delete Service</a>
                             </div>
                         </div>
                     </div>
@@ -174,6 +174,26 @@
                         <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                                 <button class="btn btn-custom-primary" name="addNote" type="submit">Add</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Delete Service "{{ service.name }}"</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><b>Are you sure?</b> This process is <b>irreversible</b> and will delete the service and all related notes and information.</p>
+                        </div>
+                        <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-danger" name="deleteService" type="submit">Confirm Deletion</button>
                         </div>
                     </div>
             </div>
