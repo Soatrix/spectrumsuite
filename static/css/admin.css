@@ -11373,6 +11373,9 @@ footer.sticky-footer {
   padding: 2rem 0;
   flex-shrink: 0;
   background: var(--bg-color);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 footer.sticky-footer .copyright {
