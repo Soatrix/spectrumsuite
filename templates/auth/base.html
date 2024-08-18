@@ -12,15 +12,12 @@
 	<link href="{% static 'css/admin.css' %}" rel="stylesheet">
 	<style>
         {{ theme.dark_css }}
-		footer.sticky-footer {
-			position: absolute;
-		}
     </style>
 	
 	<title>{% if page_title %} {{ page_title }} {% else %} Page Not Found {% endif %} | Goblin Panel</title>
 </HEAD>
 <BODY>
-<section>
+<section class="vh-100">
   <div class="container-fluid h-custom">
     <div class="row d-flex justify-content-center align-items-center h-100">
 		<h1 class="rounded p-3 m-3 bg-gradient-custom display-6">Goblin Panel {{ page_title }}</h1>
