@@ -17,8 +17,11 @@
 	<title>{% if page_title %} {{ page_title }} {% else %} Page Not Found {% endif %} | Goblin Panel</title>
 </HEAD>
 <BODY>
-<section class="vh-100">
-  <div class="container-fluid h-custom">
+<!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
     <div class="row d-flex justify-content-center align-items-center h-100">
 		<h1 class="rounded p-3 m-3 bg-gradient-custom display-6">Goblin Panel {{ page_title }}</h1>
       <div class="col-md-9 col-lg-6 col-xl-5">
@@ -37,6 +40,6 @@
                     </div>
                 </div>
             </footer>
-</section>
+</div>
 </BODY>
 </HTML>
