@@ -92,17 +92,17 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <div class="form-group">
                                 <label for="name">Service Name</label>
                                 <input class="form-control" name="name" id="name" value="{{ service.name }}" />
                             </div>
                             <div class="form-group">
-                                <label for="address">Address</label>
-                                <textarea class="form-control" style="resize: none;" rows="3" name="address" id="address">{{ service.address }}</textarea>
+                                <label for="description">Description</label>
+                                <textarea class="form-control" rows="10" name="description" id="description">{{ service.description }}</textarea>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="name">Service Category</label>
                                 <select class="form-select" name="name" id="name">
@@ -118,6 +118,10 @@
                             <div class="form-group">
                                 <label for="name">Contact Email Address</label>
                                 <input class="form-control" name="name" id="name" value="{{ service.contact_email }}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea class="form-control" style="resize: none;" rows="3" name="address" id="address">{{ service.address }}</textarea>
                             </div>
                         </div>
                         <div class="card-footer">
