@@ -1,0 +1,58 @@
+{% extends "serveradmin/base.html" %}
+{% block page_content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="row d-sm-flex align-items-center justify-content-between mb-4">
+        <div class="col-md-12">
+            <h1 class="h3 mb-0 text-dark"><i class="fas fa-users-rays"></i> All Clients</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'admin-dashboard-home' %}">Admin Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">All Clients</li>
+                </ol>
+            </nav>
+        </div>
+        {% if success %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ object }} Deleted!</strong><br> The client was successfully deleted.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% elif error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error!</strong><br>{{ error|safe }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+    <div class="card text-dark">
+        <div class="card-header">
+               <h5 class="card-title text-white float-left">All Clients</h5>
+               <a class="btn btn-custom-secondary ml-auto float-right" id="add-service-tab" href="{% url 'spectrumadmin-service-create' %}"><i class="fas fa-plus"></i> Create Client Profile</a>
+            </div>
+            <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">DOB</th>
+                        <th scope="col">Support Worker</th>
+                        <th class="text-center" scope="col">Connected Services</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                        <tr>
+                            <td><a href="{% url 'spectrumadmin-client-detail' id=client.id %}">{{ client.first_name }} {{ client.last_name }}</a></td>
+                            <td><span class="badge bg-secondary">{{ client.date_of_birth }}</span></td>
+                            <td>{% if client.support_worker %}<a href="#">{{ client.support_worker.first_name }} {{ client.support_worker.last_name }}</a>{% else %}No Support Worker Assigned{% endif %}</td>
+                            <td class="text-center"><span class="badge bg-secondary">{{ client.connected_services.count }}</span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</form>
+{% endblock %}

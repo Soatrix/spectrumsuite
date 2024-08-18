@@ -1,18 +1,44 @@
 from django.contrib import admin
 from .models import *
 
-class ServiceNoteInline(admin.TabularInline):  # You can use StackedInline for a different layout
-    model = ServiceNote
-    extra = 1  # Number of empty notes to display; 1 means an empty form to add a new note
-    readonly_fields = ('created',)  # Make the created field read-only if desired
+class EmergencyContactInline(admin.TabularInline):
+    model = EmergencyContact
+    extra = 1  # Number of empty forms to display; adjust as needed
 
-# Register the Service model with the inline
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'contact_email', 'contact_phone_number', 'active')
-    inlines = [ServiceNoteInline]
+class MedicationInline(admin.TabularInline):
+    model = Medication
+    extra = 1  # Number of empty forms to display; adjust as needed
 
-# Register your models here.
+class EducationInline(admin.TabularInline):
+    model = Education
+    extra = 1  # Number of empty forms to display; adjust as needed
+
+class EmploymentInline(admin.TabularInline):
+    model = Employment
+    extra = 1  # Number of empty forms to display; adjust as needed
+
+class ContactPreferenceInline(admin.TabularInline):
+    model = ContactPreference
+    extra = 1  # Number of empty forms to display; adjust as needed
+
+class FinancialInformationInline(admin.TabularInline):
+    model = FinancialInformation
+    extra = 1  # Number of empty forms to display; adjust as needed
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'date_of_birth', 'email', 'phone_number')
+    inlines = [
+        EmergencyContactInline,
+        MedicationInline,
+        EducationInline,
+        EmploymentInline,
+        ContactPreferenceInline,
+        FinancialInformationInline,
+    ]
+
+# Register other models
 admin.site.register(SupportWorker)
+admin.site.register(Service)
 admin.site.register(ServiceCategory)
-admin.site.register(Client)
+admin.site.register(SensoryIssue)

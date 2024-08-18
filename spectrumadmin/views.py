@@ -8,7 +8,30 @@ from django.shortcuts import get_object_or_404, redirect
 from django.conf import settings
 from .models import *
 
-# Create your views here.
+class AdminClientsView(LoginRequiredMixin, TemplateView):
+    template_name = "spectrumsuite/clients.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context['page_title'] = 'All Clients'
+        context["PROJECT_NAME"] = settings.NAME
+        context['version'] = settings.VERSION
+        context["user"] = self.request.user
+        context["clients"] = Client.objects.all()
+        return context
+
+class AdminClientDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "spectrumsuite/client-detail.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["client"] = get_object_or_404(Client, id=self.kwargs["id"])
+        context["categories"] = ServiceCategory.objects.all()
+        context["page_title"] = f"{context["client"].first_name} {context["client"].last_name}'s Profile"
+        context["PROJECT_NAME"] = settings.NAME
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        return context
 class AdminServicesView(LoginRequiredMixin, TemplateView):
     template_name = "spectrumsuite/services.html"
     def get_context_data(self, **kwargs):
