@@ -24,6 +24,7 @@ class Service(models.Model):
     category = models.ForeignKey('ServiceCategory', on_delete=models.SET_NULL, null=True, blank=True)
     contact_email = models.EmailField(blank=True)
     contact_phone_number = models.CharField(max_length=15, blank=True)
+    address = models.CharField(max_length=255, blank=True)
     active = models.BooleanField(default=True)
 
     def __str__(self):

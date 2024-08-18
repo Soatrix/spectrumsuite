@@ -19,7 +19,7 @@
             <div class="card text-dark mb-3">
                 <div class="card-header">
                     <h5 class="card-title text-white float-left">Service Information</h5>
-                    <span class="badge bg-secondary float-right">{{ service.category.name }}</span>
+                    <h5 class="float-right"><span class="badge bg-secondary p-2">{{ service.category.name }}</span></h5>
                 </div>
                 <div class="card-body">
                     <p>{{ service.description }}</p>
@@ -46,7 +46,7 @@
                                     <td><span class="badge bg-secondary">{{ note.created }}</span></td>
                                     <td><span class="badge bg-secondary">{{ note.author.username }}</span></td>
                                     <td>{{ note.note }}</td>
-                                    <td><span class="badge badge-secondary"><i class="fas fa-wrench"></i></span> <button type="submit" name="deleteNote" value="{{ note.id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button></td>
+                                    <td><button type="submit" name="deleteNote" value="{{ note.id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button></td>
                                 </tr>
                             {% endfor %}
                         {% else %}
@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div class="card text-dark">
+            <div class="card text-dark mb-3">
                 <div class="card-header">
                     <h5 class="card-title text-white">Contact Information</h5>
                 </div>
@@ -77,6 +77,77 @@
                     <div class="form-group">
                         <label for="email-address">Email Address</label>
                         <input class="form-control" name="email-address" id="email-address" disabled="disabled" value="{{ service.contact_email }}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea class="form-control" style="resize: none;" rows="3" name="address" id="address" disabled="disabled">{% if service.address %}{{ service.address }}{% else %}No fixed address.{% endif %}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="card-title text-white">Manage Service</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Service Name</label>
+                                <input class="form-control" name="name" id="name" value="{{ service.name }}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea class="form-control" style="resize: none;" rows="3" name="address" id="address">{{ service.address }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Service Category</label>
+                                <select class="form-select" name="name" id="name">
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}" {% if category == service.category %}selected="selected"{% endif %}>{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Contact Phone Number</label>
+                                <input class="form-control" name="name" id="name" value="{{ service.contact_phone_number }}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Contact Email Address</label>
+                                <input class="form-control" name="name" id="name" value="{{ service.contact_email }}" />
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-custom-primary float-right" type="submit" name="saveService">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="card-title text-white">Service Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Update Status</label>
+                                <br>
+                                <button type="submit" class="btn btn-block btn-{% if service.active %}warning{% else %}success{% endif %}" name="serviceStatus" id="serviceStatus" value="{{ service.name }}">Mark {% if service.active %}Inactive{% else %}Active{% endif %}</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Delete Service</label>
+                                <br>
+                                <button type="submit" class="btn btn-block btn-danger" name="serviceStatus" id="serviceStatus" value="{{ service.id }}">Delete Service</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

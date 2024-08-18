@@ -25,6 +25,7 @@ class AdminServiceDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["service"] = get_object_or_404(Service, id=self.kwargs["id"])
+        context["categories"] = ServiceCategory.objects.all()
         context["page_title"] = context["service"].name
         context["version"] = settings.VERSION
         context["user"] = self.request.user
