@@ -52,10 +52,9 @@
                         <tr>
                             <th scope="col">Service Name</th>
                             <th scope="col">Category</th>
-                            <th scope="col">Active</th>
+                            <th scope="col">Available</th>
                             <th scope="col">Contact</th>
                             <th scope="col">Clients</th>
-                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,10 +62,9 @@
                             <tr>
                                 <td><a href="{% url 'spectrumadmin-service-detail' id=service.id %}">{{ service.name }}</a></td>
                                 <td><span class="badge bg-secondary">{{ service.category.name }}</span></td>
-                                <td><span class="badge badge-{% if service.active %}success{% else %}danger{% endif %}">{% if service.active %}Active{% else %}Not Active{% endif %}</span></td>
+                                <td><span class="badge badge-{% if service.active and service.category.active %}success{% else %}danger{% endif %}">{% if service.active and service.category.active %}Available{% else %}Not Available{% endif %}</span></td>
                                 <td>{{ service.contact_phone_number }}</td>
                                 <td><span class="badge badge-secondary">{{ service.clients.count }}</span></td>
-                                <td><a href="#" class="badge badge-custom"><i class="fas fa-wrench"></i></a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
