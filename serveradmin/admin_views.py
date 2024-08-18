@@ -22,6 +22,7 @@ class AdminDashboard404View(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = '404'
+        context["PROJECT_NAME"] = settings.NAME
         context['version'] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -32,6 +33,7 @@ class AdminDashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context['page_title'] = 'Dashboard'
+        context["PROJECT_NAME"] = settings.NAME
         context['version'] = settings.VERSION
         context["user"] = self.request.user
         context["services"] = Service.objects.all()
