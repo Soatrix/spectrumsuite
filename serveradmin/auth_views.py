@@ -15,7 +15,10 @@ class AuthLoginView(LoggedOutRequiredMixin, TemplateView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect(reverse('admin-dashboard-home'))
+            if user.is_superuser:
+                return redirect('admin-dashboard-home')
+            else:
+                return redirect('dashboard-home')
         else:
             return render(request, self.template_name, {
                 'page_title': 'Login',
