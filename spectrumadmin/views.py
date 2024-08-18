@@ -28,5 +28,26 @@ class AdminServiceDetailView(LoginRequiredMixin, TemplateView):
         context["page_title"] = context["service"].name
         context["version"] = settings.VERSION
         context["user"] = self.request.user
-
         return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if "addNote" in request.POST:
+            if "noteDescription" in request.POST:
+                noteDescription = request.POST.get("noteDescription")
+                if noteDescription != "":
+                    note = ServiceNote(service=context["service"], author=context["user"], note=noteDescription)
+                    note.save()
+                    context["success"] = True
+                else:
+                    context["success"] = False
+                    context["error"] = "Your note was blank, you must input a description of your note."
+            else:
+                context["success"] = False
+                context["error"] = "Unable to load your note."
+        elif "deleteNote" in request.POST:
+            noteID = request.POST.get("deleteNote")
+            note = get_object_or_404(ServiceNote, id=int(noteID))
+            note.delete()
+            context["success"] = True
+        context["service"] = get_object_or_404(Service, id=self.kwargs["id"])
+        return self.render_to_response(context)

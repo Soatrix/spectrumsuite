@@ -1,113 +1,111 @@
 {% extends "serveradmin/base.html" %}
 {% block page_content %}
 <!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-dark"><i class="fas fa-hands-holding-child"></i> {{ service.name }}</h1>
-	<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			{% url 'admin-dashboard-home' as url %}
-			<li class="breadcrumb-item"><a href="{{ url }}">Admin Dashboard</a></li>
-			<li class="breadcrumb-item"><a href="{% url 'spectrumadmin-services' %}">Services</a></li>
-			<li class="breadcrumb-item active" aria-current="page">{{ service.name }}</li>
-		</ol>
-	</nav>
-</div>
-<div class="row">
-    <div class="col-md-7">
-        <div class="card text-dark mb-3">
-            <div class="card-header">
-                <h5 class="card-title text-white float-left">Service Information</h5>
-                <span class="badge bg-secondary float-right">{{ service.category.name }}</span>
+<form method="post" action="{% url 'spectrumadmin-service-detail' id=service.id %}">
+	{% csrf_token %}
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-dark"><i class="fas fa-hands-holding-child"></i> {{ service.name }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                {% url 'admin-dashboard-home' as url %}
+                <li class="breadcrumb-item"><a href="{{ url }}">Admin Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'spectrumadmin-services' %}">Services</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ service.name }}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="card-title text-white float-left">Service Information</h5>
+                    <span class="badge bg-secondary float-right">{{ service.category.name }}</span>
+                </div>
+                <div class="card-body">
+                    <p>{{ service.description }}</p>
+                </div>
             </div>
-            <div class="card-body">
-                <p>{{ service.description }}</p>
-            </div>
-        </div>
-        <div class="card text-dark mb-3">
-            <div class="card-header">
-                <h5 class="card-title text-white float-left">Notes</h5>
-                <a href="#" class="float-end d-none d-sm-inline-block btn btn-sm btn-custom-secondary shadow-sm" data-toggle="modal" data-target="#noteModal">Add Note <i class="fas fa-plus fa-sm text-white-50"></i></a>
-            </div>
-	        <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col"><i class="fas fa-calendar d-block text-center align-text-top pb-1"></i></th>
-                        <th scope="col"><i class="fas fa-user d-block text-center align-text-top pb-1"></i></th>
-                        <th scope="col">Note</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if service.notes.count > 0 %}
-                        {% for note in service.notes.all %}
-                            <tr>
-                                <td><span class="badge bg-secondary">{{ note.created }}</span></td>
-                                <td><span class="badge bg-secondary">{{ note.author.username }}</span></td>
-                                <td>{{ note.note }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="card-title text-white float-left">Notes</h5>
+                    <a href="#" class="float-end d-none d-sm-inline-block btn btn-sm btn-custom-secondary shadow-sm" data-toggle="modal" data-target="#noteModal">Add Note <i class="fas fa-plus fa-sm text-white-50"></i></a>
+                </div>
+                <table class="table table-borderless {% if user.profile.dark_mode %}table-dark{% else %}table-light{% endif %} table-hover">
+                    <thead class="thead-dark">
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td>No notes added yet.</td>
+                            <th scope="col"><i class="fas fa-calendar d-block text-center align-text-top pb-1"></i></th>
+                            <th scope="col"><i class="fas fa-user d-block text-center align-text-top pb-1"></i></th>
+                            <th scope="col">Note</th>
+                            <th scope="col"></th>
                         </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-md-5">
-        <div class="card text-dark">
-            <div class="card-header">
-                <h5 class="card-title text-white">Contact Information</h5>
+                    </thead>
+                    <tbody>
+                        {% if service.notes.count > 0 %}
+                            {% for note in service.notes.all|dictsort:"created" %}
+                                <tr>
+                                    <td><span class="badge bg-secondary">{{ note.created }}</span></td>
+                                    <td><span class="badge bg-secondary">{{ note.author.username }}</span></td>
+                                    <td>{{ note.note }}</td>
+                                    <td><span class="badge badge-secondary"><i class="fas fa-wrench"></i></span> <button type="submit" name="deleteNote" value="{{ note.id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>No notes added yet.</td>
+                                <td></td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
-            <div class="card-body">
-                <div class="form-group">
-                    Status: <span class="badge badge-{% if service.active %}success{% else %}danger{% endif %}">{% if service.active %}Active{% else %}Not Active{% endif %}</span>
+        </div>
+        <div class="col-md-5">
+            <div class="card text-dark">
+                <div class="card-header">
+                    <h5 class="card-title text-white">Contact Information</h5>
                 </div>
-                <div class="form-group">
-                    <label for="phone-number">Phone Number</label>
-                    <input class="form-control" name="phone-number" id="phone-number" disabled="disabled" value="{{ service.contact_phone_number }}" />
-                </div>
-                <div class="form-group">
-                    <label for="email-address">Email Address</label>
-                    <input class="form-control" name="email-address" id="email-address" disabled="disabled" value="{{ service.contact_email }}" />
+                <div class="card-body">
+                    <div class="form-group">
+                        Status: <span class="badge badge-{% if service.active %}success{% else %}danger{% endif %}">{% if service.active %}Active{% else %}Not Active{% endif %}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone-number">Phone Number</label>
+                        <input class="form-control" name="phone-number" id="phone-number" disabled="disabled" value="{{ service.contact_phone_number }}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email-address">Email Address</label>
+                        <input class="form-control" name="email-address" id="email-address" disabled="disabled" value="{{ service.contact_email }}" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-			<form method="post" action="{% url 'spectrumadmin-service-detail' id=service.id %}">
-				{% csrf_token %}
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Add Note to {{ service.name }}</h5>
-						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">×</span>
-						</button>
-					</div>
-					<div class="modal-body">
+        <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Note to {{ service.name }}</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
 
-						<div class="form-group">
-							<label for="locationShortCode">Short Code</label>
-							<input type="text" class="form-control" id="locationShortCode" name="short_code" placeholder="Location Shortcode e.g. US">
-						</div>
+                            <div class="form-group">
+                                <label for="noteDescription">Your Note</label>
+                                <textarea class="form-control" rows="5" name="noteDescription" id="noteDescription"></textarea>
+                            </div>
 
-						<div class="form-group">
-							<label for="locationDescription">Description</label>
-							<input type="text" class="form-control" id="locationDescription" name="description" placeholder="Location Description e.g. US Server #1">
-						</div>
-
-					</div>
-					<div class="modal-footer">
-							<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-							<button class="btn btn-primary" type="submit">Add</a>
-					</div>
-				</div>
-			</form>
+                        </div>
+                        <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-custom-primary" name="addNote" type="submit">Add</button>
+                        </div>
+                    </div>
+            </div>
         </div>
-    </div>
+</form>
 {% endblock %}
