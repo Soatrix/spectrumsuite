@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.views.generic import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,11 +14,74 @@ class AdminServicesView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context['page_title'] = 'Support Services'
+        context["PROJECT_NAME"] = settings.NAME
         context['version'] = settings.VERSION
         context["user"] = self.request.user
         context["services"] = Service.objects.all()
         context["categories"] = ServiceCategory.objects.all()
         return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "create-category" in request.POST:
+            if "category-name" in request.POST and "category-description" in request.POST:
+                name = request.POST.get("category-name")
+                description = request.POST.get("category-description")
+                try:
+                    category, created = ServiceCategory.objects.get_or_create(name=name, description=description)
+                    if created:
+                        context["success"] = True
+                        context["object"] = "Service Category"
+                        context["action"] = "created"
+                    else:
+                        context["success"] = False
+                        context["error"] = "A service category matching this name or description already exists."
+                except IntegrityError:
+                    context["success"] = False
+                    context["error"] = "A service category matching this name already exists."
+            else:
+                context["success"] = False
+                context["error"] = "All category fields are required."
+
+        return self.render_to_response(context)
+
+class AdminServiceCategoryDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "spectrumsuite/service-category-detail.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["category"] = get_object_or_404(ServiceCategory, id=self.kwargs["id"])
+        context["page_title"] = f"Editing {context["category"].name}"
+        context["PROJECT_NAME"] = settings.NAME
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        return context
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "update" in request.POST:
+            if "name" in request.POST and request.POST.get("name") != "":
+                name = request.POST.get("name")
+                if "description" in request.POST and request.POST.get("description") != "":
+                    description = request.POST.get("description")
+                    if "active" in request.POST:
+                        context["category"].active = True
+                    else:
+                        context["category"].active = False
+
+                    context["category"].name = name
+                    context["category"].description = description
+                    context["category"].save()
+                    context["success"] = True
+                else:
+                    context["success"] = False
+                    context["error"] = "The description is required and cannot be left blank."
+            else:
+                context["success"] = False
+                context["error"] = "The name is required and cannot be left blank."
+
+        return self.render_to_response(context)
+
 
 class AdminServiceDetailView(LoginRequiredMixin, TemplateView):
     template_name = "spectrumsuite/service-detail.html"
@@ -27,6 +91,7 @@ class AdminServiceDetailView(LoginRequiredMixin, TemplateView):
         context["service"] = get_object_or_404(Service, id=self.kwargs["id"])
         context["categories"] = ServiceCategory.objects.all()
         context["page_title"] = context["service"].name
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context

@@ -1,6 +1,6 @@
 {% extends "serveradmin/base.html" %}
 {% block page_content %}
-<form action="" method="post" enctype="multipart/form-data">
+<form action="" method="post">
     {% csrf_token %}
     <div class="row d-sm-flex align-items-center justify-content-between mb-4">
         <div class="col-md-5">
@@ -26,7 +26,7 @@
         </div>
         {% if success %}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>User Updated!</strong><br> This users information was successfully updated.
+                <strong>{{ object }} Updated!</strong><br> The {{ object }} was successfully {{ action }}.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -86,6 +86,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Description</th>
                                     <th scope="col"></th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,7 +94,8 @@
                                     <tr>
                                         <td>{{ category.name }}</td>
                                         <td>{{ category.description }}</td>
-                                        <td><a href="#" class="badge badge-custom"><i class="fas fa-wrench"></i></a></td>
+                                        <td><span class="badge badge-{% if category.active %}success{% else %}danger{% endif %}">{% if category.active %}Offered{% else %}Not Offered{% endif %}</span></td>
+                                        <td><a href="{% url 'spectrumadmin-service-category-detail' id=category.id %}" class="badge badge-custom"><i class="fas fa-wrench"></i></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -112,12 +114,12 @@
                                 <input name="category-name" id="category-name" class="form-control" type="text" />
                             </div>
                             <div class="form-group">
-                                <label for="category-desc">Description</label>
-                                <input name="category-desc" id="category-desc" class="form-control" type="text" />
+                                <label for="category-description">Description</label>
+                                <input name="category-description" id="category-description" class="form-control" type="text" />
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" name="create-cateogry" class="btn btn-custom-secondary float-right">Add</button>
+                            <button type="submit" name="create-category" class="btn btn-custom-secondary float-right">Add</button>
                         </div>
                     </div>
                 </div>
