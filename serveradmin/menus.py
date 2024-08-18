@@ -1,45 +1,5 @@
 ADMIN_MENU = [
     {
-        "name": "Network Management",
-        "items": [
-            {
-                "icon": "server",
-                "label": "Servers",
-                "link": "admin-servers"
-            },
-            {
-                "icon": "city",
-                "label": "Nodes",
-                "link": "admin-nodes"
-            },
-            {
-                "icon": "earth-oceania",
-                "label": "Locations",
-                "link": "admin-locations"
-            },
-            {
-                "icon": "database",
-                "label": "Databases",
-                "link": "admin-databases"
-            },
-            {
-                "icon": "users",
-                "label": "Users",
-                "link": "admin-users"
-            }
-        ]
-    },
-    {
-        "name": "Image Management",
-        "items": [
-            {
-                "icon": "gem",
-                "label": "Hoardes",
-                "link": "admin-hoardes"
-            }
-        ]
-    },
-    {
         "name": "Panel Management",
         "items": [
             {
