@@ -10,7 +10,7 @@
     <meta name="author" content="">
 	
 
-    <title>{{ page_title }} | Project Pulse</title>
+    <title>{{ page_title }} | {{ PROJECT_NAME }}</title>
 
 
 	{% load static %}
@@ -49,7 +49,7 @@
 					{% load static %}
                     <img src="{% static 'img/logo.png' %}" class="img-fluid" />
                 </div>
-                <div class="sidebar-brand-text">Project<sup>Pulse</sup></div>
+                <div class="sidebar-brand-text">Goblin<sup>Panel</sup></div>
             </a>
 
             <!-- Divider -->
@@ -134,7 +134,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-100 small">{{ user.first_name}} {{ user.last_name }}{% if user.is_superuser %}<br>(Administrator){% endif %}</span>
-                                <img class="img-profile rounded-circle" src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=ff6cab&color=ffffff&size=256">
+                                <img class="img-profile rounded-circle" src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=22c1c3&color=ffffff&size=256">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -177,7 +177,7 @@
             <footer class="sticky-footer">
                 <div class="container my-auto">
                     <div class=" copyright text-center text-dark my-auto">
-                        <span>Copyright &copy; Project Panel 2024, All Rights Reserved.</span>
+                        <span>Copyright &copy; {{ PROJECT_NAME }} 2024, All Rights Reserved.</span>
                     </div>
                 </div>
             </footer>

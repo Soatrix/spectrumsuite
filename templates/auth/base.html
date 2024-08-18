@@ -14,16 +14,16 @@
         {{ theme.dark_css }}
     </style>
 	
-	<title>{% if page_title %} {{ page_title }} {% else %} Page Not Found {% endif %} | Goblin Panel</title>
+	<title>{% if page_title %} {{ page_title }} {% else %} Page Not Found {% endif %} | {{ PROJECT_NAME }}</title>
 </HEAD>
 <BODY>
 <section class="vh-100">
   <div class="container-fluid h-custom">
     <div class="row d-flex justify-content-center align-items-center h-100">
-		<h1 class="rounded p-3 m-3 bg-gradient-custom display-6">Goblin Panel {{ page_title }}</h1>
+		<h1 class="rounded p-3 m-3 bg-gradient-custom display-6">{{ PROJECT_NAME }} {{ page_title }}</h1>
       <div class="col-md-9 col-lg-6 col-xl-5">
 		{% load static %}
-        <img src="{% block cover_image %}{% endblock %}" class="img-fluid rounded mx-auto d-block" style="width: 75%;" alt="Goblin Panel">
+        <img src="{% block cover_image %}{% endblock %}" class="img-fluid rounded mx-auto d-block" style="width: 75%;" alt="{{ PROJECT_NAME }}">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
 		{% block page_content %}{% endblock %}

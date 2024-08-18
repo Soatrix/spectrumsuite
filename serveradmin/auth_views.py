@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from contrib.auth.mixins import LoggedOutRequiredMixin
 from .models import Theme
+from django.conf import settings
 
 # Create your views here.
 class AuthLoginView(LoggedOutRequiredMixin, TemplateView):
@@ -27,6 +28,7 @@ class AuthLoginView(LoggedOutRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["PROJECT_NAME"] = settings.NAME
         context['page_title'] = 'Admin Login'
         context['theme'] = Theme.objects.all().first()
         return context
@@ -36,5 +38,6 @@ class AuthRegisterView(LoggedOutRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["PROJECT_NAME"] = settings.NAME
         context['page_title'] = 'Registration'
         return context
