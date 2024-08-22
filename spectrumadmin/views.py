@@ -191,7 +191,7 @@ class AdminServiceCreateView(LoginRequiredMixin, TemplateView):
                 service, created = Service.objects.get_or_create(
                     name=name,
                     description=description,
-                    contact_phone=contact_phone,
+                    contact_phone_number=contact_phone,
                     contact_email=contact_email,
                     category=category,
                     address=address
