@@ -43,7 +43,7 @@ class Node(models.Model):
         return self.name
 
 class Allocation(models.Model):
-    node = models.ForeignKey(Node, on_delete=models.CASCADE)
+    node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name="allocations")
     address = models.CharField(max_length=128)
     alias = models.CharField(max_length=256)
     port = models.PositiveIntegerField()

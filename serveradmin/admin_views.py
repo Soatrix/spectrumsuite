@@ -1,3 +1,4 @@
+from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, View
 from django.contrib.auth.models import User
@@ -13,7 +14,7 @@ import glob, ntpath
 
 from spectrumadmin.models import Service, Client
 from .models import *
-from json import dumps, loads
+import json
 
 # Create your views here.
 class AdminDashboard404View(LoginRequiredMixin, TemplateView):
@@ -46,6 +47,7 @@ class AdminLocationsView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Locations"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         context["locations"] = Location.objects.all()
@@ -59,6 +61,7 @@ class AdminLocationDetailView(LoginRequiredMixin, TemplateView):
         context["MENU"] = settings.ADMIN_MENU
         context["location"] = get_object_or_404(Location, id=self.kwargs["id"])
         context["page_title"] = "Location #" + str(context["location"].id)
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -71,6 +74,7 @@ class AdminLocationEditView(LoginRequiredMixin, TemplateView):
         context["MENU"] = settings.ADMIN_MENU
         context["location"] = get_object_or_404(Location, id=self.kwargs["id"])
         context["page_title"] = "Editinng Location #" + str(context["location"].id)
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -122,6 +126,7 @@ class AdminNodesView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Nodes"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         context["nodes"] = Node.objects.all()
@@ -135,6 +140,7 @@ class AdminNodeDetailView(LoginRequiredMixin, TemplateView):
         context["MENU"] = settings.ADMIN_MENU
         context["node"] = get_object_or_404(Node, id=self.kwargs["id"])
         context["page_title"] = context["node"].name
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -147,6 +153,7 @@ class AdminNodeConfigView(LoginRequiredMixin, TemplateView):
         context["MENU"] = settings.ADMIN_MENU
         context["node"] = get_object_or_404(Node, id=self.kwargs["id"])
         context["page_title"] = context["node"].name
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -159,6 +166,7 @@ class AdminNodeSettingsView(LoginRequiredMixin, TemplateView):
         context["MENU"] = settings.ADMIN_MENU
         context["node"] = get_object_or_404(Node, id=self.kwargs["id"])
         context["page_title"] = context["node"].name
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["locations"] = Location.objects.all()
         context["users"] = User.objects.all()
@@ -182,7 +190,7 @@ class AdminNodeSettingsView(LoginRequiredMixin, TemplateView):
 
         # Check if required data is present
         if not name or not location or not address or not ssl or not proxy or not memory or not memory_over or not disk or not disk_over or not upload_max or not visible:
-            return HttpResponseBadRequest("Missing required fields: " + dumps(request.POST))
+            return HttpResponseBadRequest("Missing required fields: " + json.dumps(request.POST))
 
         if name == "" or location == "" or address == "" or memory == "" or memory_over == "" or disk == "" or disk_over == "" or upload_max == "":
             redirect("admin-node-detail", id=node.id)
@@ -212,6 +220,7 @@ class AdminNodeAllocationsView(LoginRequiredMixin, TemplateView):
         context["MENU"] = settings.ADMIN_MENU
         context["node"] = get_object_or_404(Node, id=self.kwargs["id"])
         context["page_title"] = context["node"].name
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["allocations"] = Allocation.objects.filter(node=context["node"])
         context["user"] = self.request.user
@@ -251,6 +260,7 @@ class AdminNodeCreateView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Create Node"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["locations"] = Location.objects.all()
         context["users"] = User.objects.all()
@@ -273,7 +283,7 @@ class AdminNodeCreateView(LoginRequiredMixin, TemplateView):
 
         # Check if required data is present
         if not name or not location or not address or not ssl or not proxy or not memory or not memory_over or not disk or not disk_over or not upload_max or not visible:
-            return HttpResponseBadRequest("Missing required fields: " + dumps(request.POST))
+            return HttpResponseBadRequest("Missing required fields: " + json.dumps(request.POST))
 
         if name == "" or location == "" or address == "" or memory == "" or memory_over == "" or disk == "" or disk_over == "" or upload_max == "":
             redirect("admin-nodes")
@@ -303,6 +313,7 @@ class AdminDatabasesView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Databases"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         context["databases"] = Database.objects.all()
@@ -315,6 +326,7 @@ class AdminHoardesView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Hoardes"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         context["hoardes"] = Hoarde.objects.all()
@@ -326,7 +338,7 @@ class AdminHoardesView(LoginRequiredMixin, TemplateView):
             if "gem-file" in request.FILES:
                 if "hoarde" in request.POST:
                     gemFile = request.FILES.get("gem-file")
-                    gemJson = loads(gemFile.read())
+                    gemJson = json.loads(gemFile.read())
 
                     name = gemJson["name"]
                     hoardeID = int(request.POST.get("hoarde"))
@@ -363,6 +375,7 @@ class AdminHoardeCreateView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Hoardes"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -402,13 +415,14 @@ class AdminHoardeDetailView(LoginRequiredMixin, TemplateView):
         context["MENU"] = settings.ADMIN_MENU
         context["hoarde"] = get_object_or_404(Hoarde, id=self.kwargs["id"])
         context["page_title"] = context["hoarde"].name
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
 
         context["gems"] = context["hoarde"].gems.all()
         for gem in context["gems"]:
             with open(gem.gem_file.path, "r") as f:
-                gemJson = loads(f.read())
+                gemJson = json.loads(f.read())
                 f.close()
                 setattr(gem, "json", gemJson)
 
@@ -462,15 +476,16 @@ class AdminGemDetailView(LoginRequiredMixin, TemplateView):
         context["gem"] = get_object_or_404(Gem, id=self.kwargs["id"])
         context["gems"] = context["gem"].hoarde.gems.exclude(id=context["gem"].id)
         context["page_title"] = context["gem"].name
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         with open(context["gem"].gem_file.path, "r") as f:
-            gemJson = loads(f.read())
+            gemJson = json.loads(f.read())
             f.close()
             setattr(context["gem"], "json", gemJson)
-            setattr(context["gem"], "files", dumps(loads(gemJson["config"]["files"]), indent=4))
-            setattr(context["gem"], "logs", dumps(loads(gemJson["config"]["logs"]), indent=4))
-            setattr(context["gem"], "startup", dumps(loads(gemJson["config"]["startup"]), indent=4))
+            setattr(context["gem"], "files", json.dumps(json.loads(gemJson["config"]["files"]), indent=4))
+            setattr(context["gem"], "logs", json.dumps(json.loads(gemJson["config"]["logs"]), indent=4))
+            setattr(context["gem"], "startup", json.dumps(json.loads(gemJson["config"]["startup"]), indent=4))
         return context
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -531,7 +546,7 @@ class AdminGemDetailView(LoginRequiredMixin, TemplateView):
                     saveRequired = True
             if saveRequired:
                 with open(context["gem"].gem_file.path, "w") as f:
-                    f.write(dumps(context["gem"].json, indent=4))
+                    f.write(json.dumps(context["gem"].json, indent=4))
                     f.close()
                 context["success"] = True
 
@@ -551,6 +566,7 @@ class AdminServersView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Servers"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         context["servers"] = Server.objects.all()
@@ -563,6 +579,7 @@ class AdminUsersView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Users"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         context["users"] = User.objects.all()
@@ -576,6 +593,7 @@ class AdminUserDetailView(LoginRequiredMixin, TemplateView):
         context["adminUser"] = get_object_or_404(User, id=self.kwargs["id"])
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = f"User {context["adminUser"].username}"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         return context
@@ -613,6 +631,52 @@ class AdminUserDetailView(LoginRequiredMixin, TemplateView):
 
         return self.render_to_response(context)
 
+class AdminServerCreateView(LoginRequiredMixin, TemplateView):
+    template_name = "serveradmin/server-create.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["MENU"] = settings.ADMIN_MENU
+        context["page_title"] = "Create Server"
+        context["PROJECT_NAME"] = settings.NAME
+        context["version"] = settings.VERSION
+        context["user"] = self.request.user
+        context["users"] = User.objects.all()
+        context["locations"] = Location.objects.all()
+        context["hoardes"] = Hoarde.objects.all()
+        context["nodes_data"] = [
+            {
+                "id": node.id,
+                "name": node.name,
+                "allocations": [
+                    {
+                        "id": allocation.id,
+                        "ip": allocation.address,
+                        "port": allocation.port
+                    }
+                    for allocation in node.allocations.all()
+                ]
+            }
+            for node in Node.objects.filter(public=True)
+        ]
+        context["hoardes_data"] = [
+            {
+                "id": hoarde.id,
+                "name": hoarde.name,
+                "gems": [
+                    {
+                        "id": gem.id,
+                        "name": gem.name,
+                        "docker_images": dict(reversed(list(json.load(gem.gem_file.open())["docker_images"].items())))
+                    }
+                    for gem in hoarde.gems.all()
+                ]
+            }
+            for hoarde in context["hoardes"]
+        ]
+
+        return context
+
 class AdminThemesView(LoginRequiredMixin, TemplateView):
     template_name = "serveradmin/themes.html"
 
@@ -620,6 +684,7 @@ class AdminThemesView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["MENU"] = settings.ADMIN_MENU
         context["page_title"] = "Themes"
+        context["PROJECT_NAME"] = settings.NAME
         context["version"] = settings.VERSION
         context["user"] = self.request.user
         context["themes"] = Theme.objects.all()

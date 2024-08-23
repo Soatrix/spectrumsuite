@@ -30,6 +30,7 @@ urlpatterns = [
     path('admin/users/view/<int:id>/', AdminUserDetailView.as_view(), name="admin-user-detail"),
 
     path('admin/servers/', AdminServersView.as_view(), name="admin-servers"),
+    path('admin/servers/new/', AdminServerCreateView.as_view(), name="admin-server-create"),
 
     path('admin/themes/', AdminThemesView.as_view(), name="admin-themes"),
 

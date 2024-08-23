@@ -3509,8 +3509,8 @@ input[type="button"].btn-block {
   color: #6e707e;
   text-align: center;
   white-space: nowrap;
-  background-color: #eaecf4;
-  border: 1px solid #d1d3e2;
+  background-color: var(--body-bg);
+  border: 1px solid var(--body-bg);
   border-radius: 0.35rem;
 }
 
