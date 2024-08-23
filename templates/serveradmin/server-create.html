@@ -1,0 +1,378 @@
+{% extends "serveradmin/base.html" %}
+{% block page_content %}
+<!-- Page Heading -->
+<div class="row d-sm-flex align-items-center justify-content-between">
+	<div class="col-md-6">
+		<h1 class="h3 mb-0 text-dark"><i class="fas fa-server"></i> Create Server</h1>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="{% url 'admin-dashboard-home' %}">Admin Dashboard</a></li>
+				<li class="breadcrumb-item"><a href="{% url 'admin-servers' %}">Servers</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Create Server</li>
+			</ol>
+		</nav>
+	</div>
+    {% if success %}
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">New Hoarde Successfully Created.</h4>
+        <p>Your new hoarde has been successfully created and can be viewed on the <a href="{% url 'admin-hoardes' %}">Hoardes Page</a>.</p>
+    </div>
+    {% elif error %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+</div>
+<form method="post" action="">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Server Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="server-name">Server Name</label>
+                                <input class="form-control" id="server-name" name="server-name" placeholder="Server Name" />
+                                <small>Character limits: <span class="badge badge-secondary">a-z A-Z 0-9 _ - .</span> and <span class="badge badge-secondary">[Space]</span>.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="server-owner">Server Owner</label>
+                                <select class="form-select" id="server-owner" name="server-owner">
+                                    {% for user in users %}
+                                        <option value="{{ user.id }}">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %} ({{ user.email }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="server-description">Server Description</label>
+                                <textarea class="form-control" rows="3" id="server-description" name="server-description"></textarea>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="server-autostart" name="server-autostart">
+                                <label class="form-check-label" for="server-autostart">Start Server Once Installed</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Server Allocations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="server-node">Node</label>
+                                <select class="form-select" id="server-node" name="server-node">
+                                    {% for location in locations %}
+                                        <optgroup label="{{ location.short_code }}">
+                                            {% for node in location.nodes.all %}
+                                                {% if node.public %}<option value="{{ node.id }}">{{ node.name }}</option>{% endif %}
+                                            {% endfor %}
+                                        </optgroup>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="server-allocation">Server Allocation</label>
+                                <select class="form-select" id="server-allocation" name="server-allocation">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="extra-allocations">Additional Allocations</label>
+                                <input class="form-control" id="extra-allocations" name="extra-allocations" placeholder="Additional Allocations..."/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Container Limits</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="database-limit">Database Limit</label>
+                                <input class="form-control" name="database-limit" id="database-limit" value="0"/>
+                                <small>The total number of databases a user is allowed to create for this server.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="backup-limit">Backup Limit</label>
+                                <input class="form-control" name="backup-limit" id="backup-limit" value="0"/>
+                                <small>The total number of backups that can be created for this server.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Resource Limits</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="cpu-limit">CPU Limit</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="cpu-limit" name="cpu-limit" placeholder="0" aria-label="CPU Limit" aria-describedby="basic-addon1">
+                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                </div>
+                                <small>If you do not want to limit CPU usage, set the value to <span class="badge badge-secondary">0</span>. To determine a value, take the number of threads and multiply it by 100. For example, on a quad core system without hyperthreading <span class="badge badge-secondary">(4 * 100 = 400)</span> there is <span class="badge badge-secondary">400%</span> available. To limit a server to using half of a single thread, you would set the value to <span class="badge badge-secondary">50</span>. To allow a server to use up to two threads, set the value to <span class="badge badge-secondary">200</span>.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="cpu-pinning">CPU Pinning</label>
+                                <input type="text" class="form-control" id="cpu-pinning" name="cpu-pinning"/>
+                                <small><b>Advanced:</b> Enter the specific CPU threads that this process can run on, or leave blank to allow all threads. This can be a single number, or a comma separated list. Example: <span class="badge badge-secondary">0</span>, <span class="badge badge-secondary">0-1,3</span>, or <span class="badge badge-secondary">0,1,3,4</span>.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="memory-limit">Memory Limit</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="memory-limit" name="memory-limit" placeholder="0" aria-label="Memory Limit" aria-describedby="basic-addon1">
+                                    <span class="input-group-text" id="basic-addon1">MB</span>
+                                </div>
+                                <small>The maximum amount of memory allowed for this container. Setting this to <span class="badge badge-secondary">0</span> will allow unlimited memory in a container.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="memory-swap">Swap Memory</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="memory-swap" name="memory-swap" placeholder="0" aria-label="Memory Swap" aria-describedby="basic-addon1">
+                                    <span class="input-group-text" id="basic-addon1">MB</span>
+                                </div>
+                                <small>Setting this to <span class="badge badge-secondary">0</span> will disable swap space on this server. Setting to <span class="badge badge-secondary">-1</span> will allow unlimited swap.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="disk-space">Disk Space</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="disk-space" name="disk-space" placeholder="0" aria-label="Disk Space" aria-describedby="basic-addon1">
+                                    <span class="input-group-text" id="basic-addon1">MB</span>
+                                </div>
+                                <small>This server will not be allowed to boot if it is using more than this amount of space. If a server goes over this limit while running it will be safely stopped and locked until enough space is available. Set to <span class="badge badge-secondary">0</span> to allow unlimited disk usage.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="block-io-weight">Block IO Weight</label>
+                                <input type="number" class="form-control" id="block-io-weight" name="block-io-weight" value="500"/>
+                                <small><b>Advanced:</b> The IO performance of this server relative to other running containers on the system. Value should be between <span class="badge badge-secondary">10</span> and <span class="badge badge-secondary">1000</span>. Please see <a href="https://docs.docker.com/engine/reference/run/#block-io-bandwidth-blkio-constraint">this documentation</a> for more information about it.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="oom-killer" name="oom-killer">
+                                    <label class="form-check-label" for="oom-killer">Enable OOM Killer</label>
+                                </div>
+                                <small>Terminates the server if it breaches the memory limits. Enabling OOM killer may cause server processes to exit unexpectedly.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Nest Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="server-hoarde">Hoarde</label>
+                        <select class="form-select" id="server-hoarde" name="server-hoarde">
+                            {% for hoarde in hoardes %}
+                                <option value="{{ hoarde.id }}">{{ hoarde.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <small>Select the Hoarde that this server will use a gem from.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="server-gem">Gem</label>
+                        <select class="form-select" id="server-gem" name="server-gem">
+                        </select>
+                        <small>Select the Gem that will define how this server should operate.</small>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="skip-install" name="skip-install">
+                            <label class="form-check-label" for="skip-install">Skip Gem Install Script</label>
+                        </div>
+                        <small>If the selected Gem has an install script attached to it, the script will run during the install. If you would like to skip this step, toggle this option.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Docker Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="docker-image">Docker Image</label>
+                        <select class="form-select" id="docker-image" name="docker-image">
+                            <option>Java 21 (git.io/parkervcp/java21)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" id="custom-docker-image" name="custom-docker-image" placeholder="Custom Image..." />
+                        <small>This is the default Docker image that will be used to run this server. Select an image from the dropdown above, or enter a custom image in the text field above.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Startup Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="startup-command">Startup Command</label>
+                        <input class="form-control" name="startup-command" id="startup-command" />
+                        <small>The following data substitutes are available for the startup command: {% verbatim %}<span class="badge badge-secondary">{{SERVER_MEMORY}}</span>, <span class="badge badge-secondary">{{SERVER_IP}}</span>, and <span class="badge badge-secondary">{{SERVER_PORT}}</span>. They will be replaced with the allocated memory, server IP, and server port respectively.{% endverbatim %}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card text-dark mb-3">
+                <div class="card-header">
+                    <h5 class="page-title text-white float-left">Service Variables</h5>
+                </div>
+                <div class="card-body">
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" name="create" class="btn btn-info float-right">Create Server</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block footer_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const nodeSelect = document.getElementById("server-node");
+        const allocationSelect = document.getElementById("server-allocation");
+        const nodes = {{ nodes_data|safe }};
+
+        function updateAllocations() {
+            const nodeId = nodeSelect.value;
+
+            allocationSelect.innerHTML = "";
+
+            if(nodeId) {
+                const selectedNode = nodes.find(node => node.id == nodeId);
+                if(selectedNode && selectedNode.allocations) {
+                    selectedNode.allocations.foreach(allocation => {
+                        const option = document.createElement("option");
+                        option.value = allocation.id
+                        option.text = allocation.address + ":" + allocation.port;
+                        allocationSelect.appendChild(option)
+                    });
+                }
+            }
+        }
+
+        nodeSelect.addEventListener("change", updateAllocations);
+        updateAllocations();
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const hoardeSelect = document.getElementById("server-hoarde");
+        const gemSelect = document.getElementById("server-gem");
+        const imageSelect = document.getElementById("docker-image");
+        const hoardes = {{ hoardes_data|safe }};
+
+        function updateGems() {
+            const hoardeId = hoardeSelect.value;
+
+            // Clear previous gem options
+            gemSelect.innerHTML = "";
+            imageSelect.innerHTML = "";  // Clear docker images when hoarde changes
+
+            if (hoardeId) {
+                // Find the selected hoarde and update the gem options
+                const selectedHoarde = hoardes.find(hoarde => hoarde.id == hoardeId);
+                if (selectedHoarde && selectedHoarde.gems) {
+                    selectedHoarde.gems.forEach(gem => {
+                        const option = document.createElement("option");
+                        option.value = gem.id;
+                        option.textContent = gem.name;
+                        gemSelect.appendChild(option);
+                    });
+
+                    // Trigger gem change to update docker images
+                    updateImages();
+                }
+            }
+        }
+
+        function updateImages() {
+            const gemId = gemSelect.value;
+
+            // Clear previous docker image options
+            imageSelect.innerHTML = "";
+
+            if (gemId) {
+                // Find the selected gem and update the docker image options
+                const selectedHoarde = hoardes.find(hoarde => hoarde.id == hoardeSelect.value);
+                if (selectedHoarde && selectedHoarde.gems) {
+                    const selectedGem = selectedHoarde.gems.find(gem => gem.id == gemId);
+                    if (selectedGem && selectedGem.docker_images) {
+                        Object.entries(selectedGem.docker_images).forEach(([imageName, imageValue]) => {
+                            const option = document.createElement("option");
+                            option.value = imageValue;
+                            option.textContent = imageName + " (" + imageValue + ")";
+                            imageSelect.appendChild(option);
+                        });
+                    }
+                }
+            }
+        }
+
+        // Set up the event listeners
+        hoardeSelect.addEventListener("change", updateGems);
+        gemSelect.addEventListener("change", updateImages);
+
+        // Trigger the change event when the page first loads
+        updateGems();
+        updateImages();
+    });
+</script>
+{% endblock %}
